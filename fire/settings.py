@@ -133,3 +133,6 @@ LOGIN_URL = 'login'
 # Files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# Crispy forms
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
