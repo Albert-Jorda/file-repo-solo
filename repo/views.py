@@ -9,6 +9,7 @@ def index(request):
     return render(request, "repo/index.html", {})
 
 def login_request(request):
+    action = "Login"
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -23,16 +24,19 @@ def login_request(request):
                 messages.error(request,"User not found.")
 
         return render(request, "repo/auth_form.html", {
+            "action": action,
             "form": form
         })
 
     else:
         form = AuthenticationForm()
         return render(request, "repo/auth_form.html", {
+            "action": action,
             "form": form
         })
 
 def register_request(request):
+    action = "Register"
     if request.method == "POST":
         form = UserCreationForm(data=request.POST)
         if form.is_valid():
@@ -42,12 +46,14 @@ def register_request(request):
 
         messages.error(request,"Invalid post data.")
         return render(request, "repo/auth_form.html", {
+            "action": action,
             "form": form
         })
 
     else:
         form = UserCreationForm()
         return render(request, "repo/auth_form.html", {
+            "action": action,
             "form": form
         })
 
