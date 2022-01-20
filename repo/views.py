@@ -7,7 +7,6 @@ from django.contrib import messages
 
 def index(request):
     return render(request, "repo/index.html", {})
-    pass
 
 def login_request(request):
     if request.method == "POST":
@@ -23,14 +22,14 @@ def login_request(request):
             else:
                 messages.error(request,"User not found.")
 
-        return render(request, "repo/login.html", {
-            "login_form": form
+        return render(request, "repo/auth_form.html", {
+            "form": form
         })
 
     else:
         form = AuthenticationForm()
-        return render(request, "repo/login.html", {
-            "login_form": form
+        return render(request, "repo/auth_form.html", {
+            "form": form
         })
 
 def register_request(request):
@@ -42,14 +41,14 @@ def register_request(request):
             return redirect("index")
 
         messages.error(request,"Invalid post data.")
-        return render(request, "repo/register.html", {
-            "register_form": form
+        return render(request, "repo/auth_form.html", {
+            "form": form
         })
 
     else:
         form = UserCreationForm()
-        return render(request, "repo/register.html", {
-            "register_form": form
+        return render(request, "repo/auth_form.html", {
+            "form": form
         })
 
 def logout_request(request):
