@@ -187,3 +187,25 @@ def view_file(request, file_id):
     filename = file.file.path
     response = FileResponse(open(filename, 'rb'))
     return response
+
+@login_required
+def delete_file(request, file_id):
+    # TODO
+    pass
+
+@login_required
+def delete_folder(request,file_id):
+    # TODO
+    pass
+
+
+@login_required
+def rename_file(request, file_id):
+    # TODO
+    pass
+
+
+@login_required
+def rename_folder(request, file_id):
+    # TODO
+    pass
