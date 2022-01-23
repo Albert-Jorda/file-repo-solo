@@ -38,15 +38,28 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': './logs/debug.log',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
-        'django': {
-            'handlers': ['file'],
+        '': {
             'level': 'DEBUG',
-            'propagate': True,
+            'handlers': ['file'],
         },
     },
+
+    'formatters': {
+        'verbose': {
+            'format': '{name} {levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+
+
 }
 
 # Application definition

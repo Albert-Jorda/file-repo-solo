@@ -5,6 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from repo.forms import FileUploadForm, FileUploadToFolderForm, RegistrationForm
 from repo.models import Folder, File, HeirData
+import logging
+
+# Logger
+logger = logging.getLogger(__name__)
 
 # Template name strings
 FORM_TEMPLATE = "repo/form.html"
@@ -23,16 +27,24 @@ def login_request(request):
     form = AuthenticationForm()
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
+
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
+
             if user is not None:
                 login(request, user)
+
+                logger.info(f'User "{ username }" logged in.')
                 messages.info(request, f"You are now logged in as {username}.")
                 return redirect("index")
+
             else:
-                messages.error(request,"User not found.")
+                logger.warning(f'Failed Login Attempt: User not found (Username = "{ username }")')
+
+        else:
+            logger.warning(f"Invalid form submit on registration.")
 
     return render(request, FORM_TEMPLATE, {
         "action": "Login",
@@ -47,6 +59,8 @@ def register_request(request):
 
         if form.is_valid():
             user = form.save()
+
+            logger.info(f'User "{ user.username }" created.')
             messages.info(request, f"{user.username} is created!")
 
             # Give user a root folder on registration
@@ -58,6 +72,7 @@ def register_request(request):
             new_root_folder.save()
             return redirect("index")
 
+        logger.warning(f"Invalid form submit on registration.")
         messages.error(request,"Invalid post data.")
 
     return render(request, FORM_TEMPLATE, {
@@ -68,6 +83,7 @@ def register_request(request):
 # DONE
 @login_required
 def logout_request(request):
+    logger.info(f'User "{ request.user.username }" logged out.')
     logout(request)
     return redirect('index')
 
@@ -82,6 +98,8 @@ def upload_file(request):
             new_file = form.save(commit=False)
             new_file.owner = request.user
             new_file.save()
+
+            logger.info(f"{ request.user.username } uploaded { new_file.file.name }")
 
             messages.info(request, f"{ new_file.file.name } is uploaded!")
             return redirect('view-folder', new_file.folder.id)
@@ -151,6 +169,7 @@ def create_folder(request, parent_folder_id):
 
         return redirect('view-folder', parent_folder_id)
 
+    logger.error(f"Unhandled error on create folder request")
     messages.error(request, "Something went wrong.")
     return redirect('view-folder', parent_folder_id)
 
@@ -165,6 +184,9 @@ def upload_file_to_folder(request, folder_id):
             new_file.owner = request.user
             new_file.folder = folder
             new_file.save()
+
+            logger.info(
+                f"{ request.user.username } uploaded { new_file.file.name }")
             messages.info(request, f"{ new_file.file.name } is uploaded!")
 
     return redirect('view-folder', folder_id)
