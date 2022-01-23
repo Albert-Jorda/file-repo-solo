@@ -1,3 +1,4 @@
+from queue import Empty
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -8,7 +9,7 @@ Each user will have a default Folder with no name, and has the is_root value of 
 '''
 class Folder(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="folders")
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, blank=False)
     is_root =  models.BooleanField(default=False)
     is_shared =  models.BooleanField(default=False)
 
@@ -27,6 +28,7 @@ class HeirData(models.Model):
 
 
 class File(models.Model):
+    name = models.CharField(max_length=255, blank=False)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="files")
     uploaded_at = models.DateTimeField(default=timezone.now)
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name="files")
