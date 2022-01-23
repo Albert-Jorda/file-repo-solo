@@ -1,12 +1,8 @@
-from statistics import mode
-from django.db import models
-
-# Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.core.exceptions import ValidationError
 
+# Create your models here.
 '''
 Each user will have a default Folder with no name, and has the is_root value of true
 '''
@@ -15,6 +11,7 @@ class Folder(models.Model):
     name = models.CharField(max_length=64)
     is_root =  models.BooleanField(default=False)
     is_shared =  models.BooleanField(default=False)
+
 
 '''
 A folder, if not is_root should have an heir data with it as the "folder"
@@ -27,6 +24,7 @@ class HeirData(models.Model):
 
 
 class File(models.Model):
-    name = models.CharField(max_length=255)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="files")
     uploaded_at = models.DateTimeField(default=timezone.now)
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name="files")
+    file = models.FileField(upload_to='files/')
