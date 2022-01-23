@@ -1,0 +1,28 @@
+{% extends "repo/layout.html" %}
+{% block content %}      
+{% load crispy_forms_tags %}
+
+{% if parent %}
+    <span>
+        <a href="{% url 'view-folder' parent.id %}">{{ parent.name }}</a>
+    </span>
+{% endif %}
+
+{% for child in children %}
+    <span>
+        <a href="{% url 'view-folder' child.id %}">{{ child.name }}</a>
+    </span>
+    <br />
+{% endfor %}
+
+
+{% for file in files %}
+    <span>
+        <a href="{% url 'download-file' file.id %}" download>{{ child.name }}</a>
+    </span>
+    <br />
+{% endfor %}
+
+
+
+{% endblock %}
