@@ -1,3 +1,4 @@
+from dataclasses import fields
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from repo.models import File, Folder
@@ -12,23 +13,23 @@ class FileUploadForm(forms.ModelForm):
 
     class Meta:
         model = File
-        fields = [
-            'folder',
-            'file'
-        ]
+        fields = ['folder', 'file']
 
 
 class FileUploadToFolderForm(forms.ModelForm):
     class Meta:
         model = File
-        fields = [
-            'file'
-        ]
+        fields = ['file']
 
+
+class FolderCreationForm(forms.ModelForm):
+    class Meta:
+        model = Folder
+        fields = ['name']
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(help_text='Required', required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ['username', 'email', 'password1', 'password2']

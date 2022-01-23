@@ -16,7 +16,7 @@ urlpatterns = [
     # File Repo
     path('repo/view', views.view_repo, name='view-repo'),
     path('repo/view/folder/<int:folder_id>', views.view_folder, name='view-folder'),
-    path('repo/view/file/<int:file_id>', views.upload_file, name='view-file'),
+    path('repo/view/file/<int:file_id>', views.view_file, name='view-file'),
 
     path('repo/create/folder/<int:parent_folder_id>', views.create_folder, name='create-folder'),
     path('repo/upload/file-to-folder/<int:folder_id>', views.upload_file_to_folder, name='upload-file-to-folder'),

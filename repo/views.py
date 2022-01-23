@@ -1,3 +1,5 @@
+from asyncio.log import logger
+from django.http import FileResponse
 from django.shortcuts import  render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
@@ -5,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from repo.forms import FileUploadForm, FileUploadToFolderForm, RegistrationForm
 from repo.models import Folder, File, HeirData
+
 
 # Template name strings
 FORM_TEMPLATE = "repo/form.html"
@@ -55,6 +58,7 @@ def register_request(request):
                 name="root",
                 is_root=True
             )
+
             new_root_folder.save()
             return redirect("index")
 
@@ -81,10 +85,13 @@ def upload_file(request):
         if form.is_valid():
             new_file = form.save(commit=False)
             new_file.owner = request.user
+            new_file.name = new_file.file.name
             new_file.save()
 
             messages.info(request, f"{ new_file.file.name } is uploaded!")
             return redirect('view-folder', new_file.folder.id)
+
+        logger.warning(f'Error on uploading file from User "{ request.user.username }"')
 
     return render(request, FORM_TEMPLATE, {
         "form": form,
@@ -147,10 +154,13 @@ def create_folder(request, parent_folder_id):
 
         new_folder.save()
         new_heir_data.save()
+
+        logger.warning(f'User "{ request.user.username }" created folder  "{ folder_name }"')
         messages.info(request, f"{ folder_name } is created!")
 
         return redirect('view-folder', parent_folder_id)
 
+    
     messages.error(request, "Something went wrong.")
     return redirect('view-folder', parent_folder_id)
 
@@ -164,13 +174,15 @@ def upload_file_to_folder(request, folder_id):
             new_file = form.save(commit=False)
             new_file.owner = request.user
             new_file.folder = folder
+            new_file.name = new_file.file.name
             new_file.save()
             messages.info(request, f"{ new_file.file.name } is uploaded!")
 
     return redirect('view-folder', folder_id)
 
-# I DON'T WANT TO DO THIS
 @login_required
 def view_file(request, file_id):
-    # TODO
-    pass
+    file = File.objects.get(pk=file_id)
+    filename = file.file.path
+    response = FileResponse(open(filename, 'rb'))
+    return response
