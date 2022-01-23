@@ -1,3 +1,5 @@
+from asyncio.log import logger
+from django.http import FileResponse
 from django.shortcuts import  render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
@@ -9,6 +11,7 @@ import logging
 
 # Logger
 logger = logging.getLogger(__name__)
+
 
 # Template name strings
 FORM_TEMPLATE = "repo/form.html"
@@ -69,6 +72,7 @@ def register_request(request):
                 name="root",
                 is_root=True
             )
+
             new_root_folder.save()
             return redirect("index")
 
@@ -97,12 +101,15 @@ def upload_file(request):
         if form.is_valid():
             new_file = form.save(commit=False)
             new_file.owner = request.user
+            new_file.name = new_file.file.name
             new_file.save()
 
             logger.info(f"{ request.user.username } uploaded { new_file.file.name }")
 
             messages.info(request, f"{ new_file.file.name } is uploaded!")
             return redirect('view-folder', new_file.folder.id)
+
+        logger.warning(f'Error on uploading file from User "{ request.user.username }"')
 
     return render(request, FORM_TEMPLATE, {
         "form": form,
@@ -126,8 +133,16 @@ def view_repo(request):
 # DONE
 @login_required
 def view_folder(request, folder_id):
-    form = FileUploadToFolderForm()
     folder = Folder.objects.get(pk=folder_id)
+
+    if folder.owner != request.user:
+        logger.warning(
+            f'User {request.user.username} tried to view unshared folder { folder.name } without proper ownership')
+        messages.warning("Insufficient permissions to view the folder!")
+        return redirect('view-repo')
+
+
+    form = FileUploadToFolderForm()
     heir_data = HeirData.objects.filter(parent=folder)
     heir_data_parent = HeirData.objects.filter(folder=folder).first()
 
@@ -165,6 +180,8 @@ def create_folder(request, parent_folder_id):
 
         new_folder.save()
         new_heir_data.save()
+
+        logger.info(f'User "{ request.user.username }" created folder  "{ folder_name }"')
         messages.info(request, f"{ folder_name } is created!")
 
         return redirect('view-folder', parent_folder_id)
@@ -183,6 +200,7 @@ def upload_file_to_folder(request, folder_id):
             new_file = form.save(commit=False)
             new_file.owner = request.user
             new_file.folder = folder
+            new_file.name = new_file.file.name
             new_file.save()
 
             logger.info(
@@ -191,8 +209,35 @@ def upload_file_to_folder(request, folder_id):
 
     return redirect('view-folder', folder_id)
 
-# I DON'T WANT TO DO THIS
+# DONE
 @login_required
 def view_file(request, file_id):
+    file = File.objects.get(pk=file_id)
+    if file.owner != request.user:
+        logger.warning(
+            f'User {request.user.username} tried to view unshared file { file.file.name } without proper ownership')
+        messages.warning("Insufficient permissions to view the file!")
+        return redirect('view-repo')
+    filename = file.file.path
+    response = FileResponse(open(filename, 'rb'))
+    return response
+
+@login_required
+def delete_file(request, file_id):
+    # TODO
+    pass
+
+@login_required
+def delete_folder(request,file_id):
+    # TODO
+    pass
+
+@login_required
+def rename_file(request, file_id):
+    # TODO
+    pass
+
+@login_required
+def rename_folder(request, file_id):
     # TODO
     pass
