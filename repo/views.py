@@ -180,6 +180,7 @@ def upload_file_to_folder(request, folder_id):
 
     return redirect('view-folder', folder_id)
 
+# DONE
 @login_required
 def view_file(request, file_id):
     file = File.objects.get(pk=file_id)
