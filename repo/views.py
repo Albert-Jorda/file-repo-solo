@@ -1,14 +1,9 @@
-import os
-from django.http import HttpResponse, Http404
-from django.conf import settings
 from django.shortcuts import  render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
-from django.http import FileResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.utils.encoding import smart_str
 from django.contrib import messages
-from repo.forms import FileUploadForm
+from repo.forms import FileUploadForm, FileUploadToFolderForm, RegistrationForm
 from repo.models import Folder, File, HeirData
 
 # Template name strings
@@ -46,9 +41,9 @@ def login_request(request):
 
 # DONE
 def register_request(request):
-    form = UserCreationForm()
+    form = RegistrationForm()
     if request.method == "POST":
-        form = UserCreationForm(data=request.POST)
+        form = RegistrationForm(data=request.POST)
 
         if form.is_valid():
             user = form.save()
@@ -56,7 +51,7 @@ def register_request(request):
 
             # Give user a root folder on registration
             new_root_folder = Folder(
-                owner=request.user, 
+                owner=user, 
                 name="root",
                 is_root=True
             )
@@ -71,72 +66,111 @@ def register_request(request):
     })
 
 # DONE
+@login_required
 def logout_request(request):
     logout(request)
     return redirect('index')
 
-# ???
+# DONE (Could be better)
+@login_required
 def upload_file(request):
     form = FileUploadForm(request.user)
     if request.method == "POST":
         form = FileUploadForm(request.user, request.POST, request.FILES)
 
         if form.is_valid():
-            file = form.save(commit=False)
-            file.owner(request.user)
-            return redirect('folder-view', file.folder)
+            new_file = form.save(commit=False)
+            new_file.owner = request.user
+            new_file.save()
+
+            messages.info(request, f"{ new_file.file.name } is uploaded!")
+            return redirect('view-folder', new_file.folder.id)
 
     return render(request, FORM_TEMPLATE, {
         "form": form,
         "action": "Upload File"
     })
 
-# ???
+# DONE
+@login_required
 def view_repo(request):
     folder = Folder.objects.get(owner=request.user, is_root=True)
 
     return render(request, FOLDER_VIEW_TEMPLATE, {
         "action": "View Repo",
+        "current": None,
         "parent": None,
         "children": [folder],
-        "files": None
+        "files": None,
+        "upload_form": None
     })
 
-# ???
+# DONE
+@login_required
 def view_folder(request, folder_id):
+    form = FileUploadToFolderForm()
     folder = Folder.objects.get(pk=folder_id)
     heir_data = HeirData.objects.filter(parent=folder)
-    parent = HeirData.objects.get(folder=folder)
+    heir_data_parent = HeirData.objects.filter(folder=folder).first()
 
     # Parenting logic
     children = []
     for child in heir_data:
         children.append(child.folder)
 
+    parent = heir_data_parent.parent if heir_data_parent else None
+    
     files = File.objects.filter(folder=folder)
 
     return render(request, FOLDER_VIEW_TEMPLATE, {
         "action": "View Repo",
+        "current": folder,
         "parent": parent,
         "children": children,
-        "files": files
+        "files": files,
+        "upload_form": form
     })
 
-# ????????????????????????
-def download_file(request, file_id):
-    file = File.objects.get(id=file_id)
-    response = HttpResponse(content_type='application/force-download')
+# DONE
+@login_required
+def create_folder(request, parent_folder_id):
+    if request.method == "POST":
+        parent = Folder.objects.get(pk=parent_folder_id)
+        folder_name = request.POST.get("folder-name")
 
-    response['Content-Disposition'] = f'attachment; filename={smart_str(file.file.name)}'
-    response['X-Sendfile'] = smart_str(file.file.url)
+        new_folder = Folder(
+            owner=request.user,
+            name=folder_name,
+        )
 
-    return response
+        new_heir_data = HeirData(folder=new_folder, parent=parent)
 
-def create_folder(request):
-    # TODO
-    pass
+        new_folder.save()
+        new_heir_data.save()
+        messages.info(request, f"{ folder_name } is created!")
 
+        return redirect('view-folder', parent_folder_id)
+
+    messages.error(request, "Something went wrong.")
+    return redirect('view-folder', parent_folder_id)
+
+# ???
+@login_required
+def upload_file_to_folder(request, folder_id):
+    if request.method == "POST":
+        folder = Folder.objects.get(pk=folder_id)
+        form = FileUploadToFolderForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_file = form.save(commit=False)
+            new_file.owner = request.user
+            new_file.folder = folder
+            new_file.save()
+            messages.info(request, f"{ new_file.file.name } is uploaded!")
+
+    return redirect('view-folder', folder_id)
+
+# I DON'T WANT TO DO THIS
+@login_required
 def view_file(request, file_id):
     # TODO
     pass
-

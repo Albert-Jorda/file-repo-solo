@@ -18,11 +18,10 @@ urlpatterns = [
     path('repo/view/folder/<int:folder_id>', views.view_folder, name='view-folder'),
     path('repo/view/file/<int:file_id>', views.upload_file, name='view-file'),
 
-    path('repo/create/folder', views.view_folder, name='create-folder'),
-    path('repo/upload/file', views.upload_file, name='upload-file'),
-    path('repo/download/file/<int:file_id>', views.download_file, name='download-file'),
+    path('repo/create/folder/<int:parent_folder_id>', views.create_folder, name='create-folder'),
+    path('repo/upload/file-to-folder/<int:folder_id>', views.upload_file_to_folder, name='upload-file-to-folder'),
+    path('repo/upload/file', views.upload_file, name='upload-file')
 ]
-
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

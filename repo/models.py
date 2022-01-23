@@ -12,6 +12,9 @@ class Folder(models.Model):
     is_root =  models.BooleanField(default=False)
     is_shared =  models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.name
+
 
 '''
 A folder, if not is_root should have an heir data with it as the "folder"
@@ -27,4 +30,7 @@ class File(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="files")
     uploaded_at = models.DateTimeField(default=timezone.now)
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name="files")
-    file = models.FileField(upload_to='files/')
+    file = models.FileField(upload_to='')
+
+    def __str__(self):
+        return self.file.name

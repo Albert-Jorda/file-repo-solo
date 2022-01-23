@@ -4,13 +4,14 @@
 
 {% if parent %}
     <span>
-        <a href="{% url 'view-folder' parent.id %}">{{ parent.name }}</a>
+        <a href="{% url 'view-folder' parent.id %}">&lt;&lt; {{ parent.name }}</a>
     </span>
+    <br />
 {% endif %}
 
 {% for child in children %}
     <span>
-        <a href="{% url 'view-folder' child.id %}">{{ child.name }}</a>
+        <a href="{% url 'view-folder' child.id %}">{{ child.name }} &gt;&gt;</a>
     </span>
     <br />
 {% endfor %}
@@ -18,11 +19,25 @@
 
 {% for file in files %}
     <span>
-        <a href="{% url 'download-file' file.id %}" download>{{ child.name }}</a>
+        <a href="{{ file.file.url }}" download>{{ file.file.name }}</a>
     </span>
     <br />
 {% endfor %}
 
+{% if current %}
+<br />
+<form method="POST" action="{% url 'create-folder' current.id %}">
+    {% csrf_token %}
+    <input type="text" placeholder="Folder Name" name="folder-name">
+    <input type="submit" value="Create Folder">
+</form>
 
+<br />
+<form method="POST" enctype=multipart/form-data action="{% url 'upload-file-to-folder' current.id %}">
+    {% csrf_token %}
+    {{ upload_form|crispy }}
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+{% endif %}
 
 {% endblock %}
