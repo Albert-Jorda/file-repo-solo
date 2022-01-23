@@ -71,7 +71,7 @@ def logout_request(request):
     logout(request)
     return redirect('index')
 
-# DONE (Could be better)
+# DONE
 @login_required
 def upload_file(request):
     form = FileUploadForm(request.user)
@@ -154,7 +154,7 @@ def create_folder(request, parent_folder_id):
     messages.error(request, "Something went wrong.")
     return redirect('view-folder', parent_folder_id)
 
-# ???
+# DONE
 @login_required
 def upload_file_to_folder(request, folder_id):
     if request.method == "POST":
