@@ -1,11 +1,9 @@
-from dataclasses import fields
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from repo.models import File, Folder
 from django import forms
 
 
-# Create Forms here
 class FileUploadForm(forms.ModelForm):
     def __init__(self, owner, *args, **kwargs):
         super(FileUploadForm, self).__init__(*args, **kwargs)

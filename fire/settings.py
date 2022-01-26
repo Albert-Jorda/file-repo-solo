@@ -65,14 +65,14 @@ LOGGING = {
 # Application definition
 
 INSTALLED_APPS = [
-    'repo',
-    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'repo',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -169,3 +169,6 @@ MEDIA_URL = '/media/'
 
 # Crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Custom user
+AUTH_USER_MODEL = "repo.User"
