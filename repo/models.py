@@ -1,4 +1,3 @@
-from queue import Empty
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -29,6 +28,7 @@ class HeirData(models.Model):
 
 class File(models.Model):
     name = models.CharField(max_length=255, blank=False)
+    category = models.CharField(max_length=64, blank=False)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="files")
     uploaded_at = models.DateTimeField(default=timezone.now)
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name="files")
