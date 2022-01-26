@@ -1,4 +1,4 @@
-types = {
+TYPES = {
     "video": [
         "mp4", "mkv", "webm"
     ],
@@ -11,7 +11,7 @@ types = {
         "jpg", "jpeg", "png"
     ],
 
-    "executable":[
+    "executable": [
         "exe"
     ]
 }

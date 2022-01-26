@@ -5,8 +5,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from fire.filetypes import TYPES
 from repo.forms import FileUploadForm, FileUploadToFolderForm, RegistrationForm
 from repo.models import Folder, File, HeirData
+from repo.helpers import determine_category
 import logging
 
 # Logger
@@ -102,6 +104,7 @@ def upload_file(request):
             new_file = form.save(commit=False)
             new_file.owner = request.user
             new_file.name = new_file.file.name
+            new_file.category = determine_category(new_file.file.name)
             new_file.save()
 
             logger.info(f"{ request.user.username } uploaded { new_file.file.name }")
@@ -116,6 +119,26 @@ def upload_file(request):
         "action": "Upload File"
     })
 
+# DONE
+@login_required
+def upload_file_to_folder(request, folder_id):
+    if request.method == "POST":
+        folder = Folder.objects.get(pk=folder_id)
+        form = FileUploadToFolderForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_file = form.save(commit=False)
+            new_file.owner = request.user
+            new_file.folder = folder
+            new_file.name = new_file.file.name
+            new_file.category = determine_category(new_file.file.name)
+            new_file.save()
+
+            logger.info(
+                f"{ request.user.username } uploaded { new_file.file.name }")
+            messages.info(request, f"{ new_file.file.name } is uploaded!")
+
+    return redirect('view-folder', folder_id)
+    
 # DONE
 @login_required
 def view_repo(request):
@@ -189,25 +212,6 @@ def create_folder(request, parent_folder_id):
     logger.error(f"Unhandled error on create folder request")
     messages.error(request, "Something went wrong.")
     return redirect('view-folder', parent_folder_id)
-
-# DONE
-@login_required
-def upload_file_to_folder(request, folder_id):
-    if request.method == "POST":
-        folder = Folder.objects.get(pk=folder_id)
-        form = FileUploadToFolderForm(request.POST, request.FILES)
-        if form.is_valid():
-            new_file = form.save(commit=False)
-            new_file.owner = request.user
-            new_file.folder = folder
-            new_file.name = new_file.file.name
-            new_file.save()
-
-            logger.info(
-                f"{ request.user.username } uploaded { new_file.file.name }")
-            messages.info(request, f"{ new_file.file.name } is uploaded!")
-
-    return redirect('view-folder', folder_id)
 
 # DONE
 @login_required
