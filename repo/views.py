@@ -1,4 +1,3 @@
-from asyncio.log import logger
 from django.http import FileResponse
 from django.shortcuts import  render, redirect
 from django.contrib.auth import login, logout, authenticate
