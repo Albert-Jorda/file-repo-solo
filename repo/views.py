@@ -5,7 +5,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from fire.filetypes import TYPES
 from repo.forms import FileUploadForm, FileUploadToFolderForm, RegistrationForm
 from repo.models import Folder, File, HeirData
 from repo.helpers import determine_category
@@ -138,7 +137,7 @@ def upload_file_to_folder(request, folder_id):
             messages.info(request, f"{ new_file.file.name } is uploaded!")
 
     return redirect('view-folder', folder_id)
-    
+
 # DONE
 @login_required
 def view_repo(request):
