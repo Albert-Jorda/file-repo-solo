@@ -1,13 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
+from fire.settings import AUTH_USER_MODEL
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    email = models.EmailField(unique=True)
 
 # Create your models here.
 '''
 Each user will have a default Folder with no name, and has the is_root value of true
 '''
 class Folder(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="folders")
+    owner = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="folders")
     name = models.CharField(max_length=64, blank=False)
     is_root =  models.BooleanField(default=False)
     is_shared =  models.BooleanField(default=False)
@@ -29,7 +33,7 @@ class HeirData(models.Model):
 class File(models.Model):
     name = models.CharField(max_length=255, blank=False)
     category = models.CharField(max_length=64, blank=False)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="files")
+    owner = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="files")
     uploaded_at = models.DateTimeField(default=timezone.now)
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name="files")
     file = models.FileField(upload_to='')

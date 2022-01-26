@@ -1,12 +1,12 @@
 from asyncio.log import logger
 from django.http import FileResponse
 from django.shortcuts import  render, redirect
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
 from repo.forms import FileUploadForm, FileUploadToFolderForm, RegistrationForm
-from repo.models import Folder, File, HeirData
+from repo.models import Folder, File, HeirData, User
 from repo.helpers import determine_category
 import logging
 
@@ -29,26 +29,35 @@ def index(request):
 # DONE
 def login_request(request):
     form = AuthenticationForm()
+
+    def auth_attempt(username, password):
+        user = authenticate(
+            username=username, password=password)
+        if user is not None:
+            login(request, user)
+
+            logger.info(f'User "{ user.username }" logged in.')
+            messages.info(
+                request, f"You are now logged in as {user.username}.")
+            return True
+
+        return False
+
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
-
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-
-            if user is not None:
-                login(request, user)
-
-                logger.info(f'User "{ username }" logged in.')
-                messages.info(request, f"You are now logged in as {username}.")
-                return redirect("index")
-
-            else:
-                logger.warning(f'Failed Login Attempt: User not found (Username = "{ username }")')
-
+        username = form['username'].value()
+        password = form['password'].value()
+        if(auth_attempt(username, password)):
+            return redirect("index")
         else:
-            logger.warning(f"Invalid form submit on registration.")
+            try:
+                email_attempt = User.objects.get(email=username)
+                if(auth_attempt(email_attempt.username, password)):
+                    return redirect("index")
+            except:
+                pass
+        
+        logger.warning(f'Failed Login Attempt: User not found (Username or Email = "{ username }")')
 
     return render(request, FORM_TEMPLATE, {
         "action": "Login",
