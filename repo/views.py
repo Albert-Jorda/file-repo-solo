@@ -242,8 +242,8 @@ def delete_folder(request, folder_id):
 
     if folder.owner != request.user:
         logger.warning(
-            f'User {request.user.username} tried to view unshared file { folder.name } without proper ownership')
-        messages.warning("Insufficient permissions to view the file!")
+            f'User {request.user.username} tried to delete unshared folder { folder.name } without proper ownership')
+        messages.warning("Insufficient permissions to delete the folder!")
         return redirect('view-repo')
 
     if request.method == "POST":
@@ -264,8 +264,8 @@ def delete_file(request, file_id):
 
     if file.owner != request.user:
         logger.warning(
-            f'User {request.user.username} tried to view unshared file { file.name } without proper ownership')
-        messages.warning("Insufficient permissions to view the file!")
+            f'User {request.user.username} tried to delete unshared file { file.name } without proper ownership')
+        messages.warning("Insufficient permissions to delete the file!")
 
         return redirect('view-repo')
 
@@ -287,8 +287,14 @@ def rename_folder(request, folder_id):
 
     if folder.owner != request.user:
         logger.warning(
-            f'User {request.user.username} tried to view unshared file { folder.name } without proper ownership')
-        messages.warning("Insufficient permissions to view the file!")
+            f'User {request.user.username} tried to view unshared folder { folder.name } without proper ownership')
+        messages.warning("Insufficient permissions to rename the folder!")
+        return redirect('view-repo')
+
+    if folder.is_root:
+        logger.warning(
+            f'User {request.user.username} tried to rename a root folder')
+        messages.warning("You cannot rename the root folder!")
         return redirect('view-repo')
 
     if request.method == "POST":
@@ -312,8 +318,8 @@ def rename_file(request, file_id):
 
     if file.owner != request.user:
         logger.warning(
-            f'User {request.user.username} tried to view unshared file { file.name } without proper ownership')
-        messages.warning("Insufficient permissions to view the file!")
+            f'User {request.user.username} tried to rename unshared file { file.name } without proper ownership')
+        messages.warning("Insufficient permissions to rename the file!")
 
         return redirect('view-repo')
 
