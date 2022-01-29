@@ -1,7 +1,20 @@
+from dataclasses import fields
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from repo.models import File, Folder
 from django import forms
+
+
+class FolderRenameForm(forms.ModelForm):
+    class Meta:
+        model = Folder
+        fields = ['name']
+
+
+class FileRenameForm(forms.ModelForm):
+    class Meta:
+        model = File
+        fields = ['name']
 
 
 class FileUploadForm(forms.ModelForm):

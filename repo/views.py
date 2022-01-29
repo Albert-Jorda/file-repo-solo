@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from repo.forms import FileUploadForm, FileUploadToFolderForm, RegistrationForm
+from repo.forms import FileUploadForm, FileUploadToFolderForm, RegistrationForm, FolderRenameForm, FileRenameForm
 from repo.models import Folder, File, HeirData, User
 from repo.helpers import determine_category
 import logging
@@ -17,7 +17,6 @@ FORM_TEMPLATE = "repo/form.html"
 INDEX_TEMPLATE = "repo/index.html"
 FOLDER_VIEW_TEMPLATE = "repo/folder.html"
 CONFIRMATION_TEMPLATE = "repo/confirmation.html"
-RENAME_FORM_TEMPLATE = "repo/rename.html"
 
 # Create your views here.
 
@@ -237,8 +236,6 @@ def view_file(request, file_id):
 # DONE
 @login_required
 def delete_folder(request, folder_id):
-    action = "Confirm Folder Delete"
-
     folder = Folder.objects.get(pk=folder_id)
     heir_data = HeirData.objects.filter(folder=folder).first()
     parent = heir_data.parent
@@ -256,14 +253,12 @@ def delete_folder(request, folder_id):
         return redirect('view-folder', parent.id)
     else:
         return render(request, CONFIRMATION_TEMPLATE, {
-            action: action
+            "action": "Confirm Folder Delete"
         })
 
 # DONE
 @login_required
 def delete_file(request, file_id):
-    action = "Confirm File Delete"
-    
     file = File.objects.get(pk=file_id)
     folder = file.folder
 
@@ -281,16 +276,57 @@ def delete_file(request, file_id):
         return redirect('view-folder', folder.id)
     else:
         return render(request, CONFIRMATION_TEMPLATE, {
-            action: action
+            "action": "Confirm File Delete"
         })
 
 @login_required
 def rename_folder(request, folder_id):
-    # TODO
-    pass
+    folder = Folder.objects.get(pk=folder_id)
+    heir_data = HeirData.objects.filter(folder=folder).first()
+    parent = heir_data.parent
+
+    if folder.owner != request.user:
+        logger.warning(
+            f'User {request.user.username} tried to view unshared file { folder.name } without proper ownership')
+        messages.warning("Insufficient permissions to view the file!")
+        return redirect('view-repo')
+
+    if request.method == "POST":
+        form = FolderRenameForm(request.POST, instance=folder)
+        if form.is_valid():
+            form.save()
+            
+        return redirect('view-folder', parent.id)
+
+    else:
+        form = FolderRenameForm(instance=folder)
+        return render(request, FORM_TEMPLATE, {
+            "action": "Rename Folder",
+            "form": form
+        })
 
 @login_required
 def rename_file(request, file_id):
-    # TODO
-    pass
+    file = File.objects.get(pk=file_id)
+    folder = file.folder
 
+    if file.owner != request.user:
+        logger.warning(
+            f'User {request.user.username} tried to view unshared file { file.name } without proper ownership')
+        messages.warning("Insufficient permissions to view the file!")
+
+        return redirect('view-repo')
+
+    if request.method == "POST":
+        form = FileRenameForm(request.POST, instance=file)
+        if form.is_valid():
+            form.save()
+
+        return redirect('view-folder', folder.id)
+
+    else:
+        form = FileRenameForm(instance=file)
+        return render(request, CONFIRMATION_TEMPLATE, {
+            "action": "Rename File",
+            "form": form
+        })
