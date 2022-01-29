@@ -12,12 +12,12 @@ import logging
 # Logger
 logger = logging.getLogger(__name__)
 
-
 # Template name strings
 FORM_TEMPLATE = "repo/form.html"
 INDEX_TEMPLATE = "repo/index.html"
 FOLDER_VIEW_TEMPLATE = "repo/folder.html"
-FILE_VIEW_TEMPLATE = "repo/file.html"
+CONFIRMATION_TEMPLATE = "repo/confirmation.html"
+RENAME_FORM_TEMPLATE = "repo/rename.html"
 
 # Create your views here.
 
@@ -171,7 +171,6 @@ def view_folder(request, folder_id):
         messages.warning("Insufficient permissions to view the folder!")
         return redirect('view-repo')
 
-
     form = FileUploadToFolderForm()
     heir_data = HeirData.objects.filter(parent=folder)
     heir_data_parent = HeirData.objects.filter(folder=folder).first()
@@ -224,22 +223,69 @@ def create_folder(request, parent_folder_id):
 @login_required
 def view_file(request, file_id):
     file = File.objects.get(pk=file_id)
-    if file.owner != request.user:
+
+    if file.owner != request.user and not file.folder.is_shared:
         logger.warning(
-            f'User {request.user.username} tried to view unshared file { file.file.name } without proper ownership')
+            f'User {request.user.username} tried to view unshared file { file.name } without proper ownership')
         messages.warning("Insufficient permissions to view the file!")
         return redirect('view-repo')
+
     filename = file.file.path
     response = FileResponse(open(filename, 'rb'))
     return response
 
+# DONE
+@login_required
+def delete_folder(request, folder_id):
+    action = "Confirm Folder Delete"
+
+    folder = Folder.objects.get(pk=folder_id)
+    heir_data = HeirData.objects.filter(folder=folder).first()
+    parent = heir_data.parent
+
+    if folder.owner != request.user:
+        logger.warning(
+            f'User {request.user.username} tried to view unshared file { folder.name } without proper ownership')
+        messages.warning("Insufficient permissions to view the file!")
+        return redirect('view-repo')
+
+    if request.method == "POST":
+        if request.POST.get("confirmation") == "confirm":
+            folder.delete()
+
+        return redirect('view-folder', parent.id)
+    else:
+        return render(request, CONFIRMATION_TEMPLATE, {
+            action: action
+        })
+
+# DONE
 @login_required
 def delete_file(request, file_id):
-    # TODO
-    pass
+    action = "Confirm File Delete"
+    
+    file = File.objects.get(pk=file_id)
+    folder = file.folder
+
+    if file.owner != request.user:
+        logger.warning(
+            f'User {request.user.username} tried to view unshared file { file.name } without proper ownership')
+        messages.warning("Insufficient permissions to view the file!")
+
+        return redirect('view-repo')
+
+    if request.method == "POST":
+        if request.POST.get("confirmation") == "confirm":
+            file.delete()
+
+        return redirect('view-folder', folder.id)
+    else:
+        return render(request, CONFIRMATION_TEMPLATE, {
+            action: action
+        })
 
 @login_required
-def delete_folder(request,file_id):
+def rename_folder(request, folder_id):
     # TODO
     pass
 
@@ -248,7 +294,3 @@ def rename_file(request, file_id):
     # TODO
     pass
 
-@login_required
-def rename_folder(request, file_id):
-    # TODO
-    pass

@@ -14,6 +14,8 @@ class Folder(models.Model):
     owner = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="folders")
     name = models.CharField(max_length=64, blank=False)
     is_root =  models.BooleanField(default=False)
+
+    # Experimental, can be implemented if we have enough time
     is_shared =  models.BooleanField(default=False)
 
     def __str__(self):
