@@ -300,13 +300,14 @@ def rename_folder(request, folder_id):
     if folder.owner != request.user:
         logger.warning(
             f'User {request.user.username} tried to rename folder { folder.name } without proper ownership')
-        messages.warning("Insufficient permissions to rename the folder!")
+        messages.warning(
+            request, "Insufficient permissions to rename the folder!")
         return redirect('view-repo')
 
     if folder.is_root:
         logger.warning(
             f'User {request.user.username} tried to rename a root folder')
-        messages.warning("You cannot rename the root folder!")
+        messages.warning(request, "You cannot rename the root folder!")
         return redirect('view-repo')
 
     if request.method == "POST":
@@ -316,7 +317,7 @@ def rename_folder(request, folder_id):
 
             logger.info(
                 f'User {request.user.username} renamed folder { prev_name } to { folder.name }')
-            messages.info(f"Folder { prev_name } renamed to { folder.name }!")
+            messages.info(request, f"Folder { prev_name } renamed to { folder.name }!")
             
         return redirect('view-folder', parent.id)
 
