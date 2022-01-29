@@ -167,7 +167,8 @@ def view_folder(request, folder_id):
     if folder.owner != request.user:
         logger.warning(
             f'User {request.user.username} tried to view unshared folder { folder.name } without proper ownership')
-        messages.warning("Insufficient permissions to view the folder!")
+        messages.warning(
+            request, "Insufficient permissions to view the folder!")
         return redirect('view-repo')
 
     form = FileUploadToFolderForm()
@@ -226,7 +227,7 @@ def view_file(request, file_id):
     if file.owner != request.user and not file.folder.is_shared:
         logger.warning(
             f'User {request.user.username} tried to view unshared file { file.name } without proper ownership')
-        messages.warning("Insufficient permissions to view the file!")
+        messages.warning(request, "Insufficient permissions to view the file!")
         return redirect('view-repo')
 
     filename = file.file.path
@@ -243,12 +244,16 @@ def delete_folder(request, folder_id):
     if folder.owner != request.user:
         logger.warning(
             f'User {request.user.username} tried to delete folder { folder.name } without proper ownership')
-        messages.warning("Insufficient permissions to delete the folder!")
+        messages.warning(request, "Insufficient permissions to delete the folder!")
         return redirect('view-repo')
 
     if request.method == "POST":
         if request.POST.get("confirmation") == "confirm":
+            logger.info(
+                f'User {request.user.username} deleted folder { folder.name }')
+            messages.info(request, f"Folder { folder.name } deleted!")
             folder.delete()
+            
 
         return redirect('view-folder', parent.id)
     else:
@@ -265,13 +270,18 @@ def delete_file(request, file_id):
     if file.owner != request.user:
         logger.warning(
             f'User {request.user.username} tried to delete file { file.name } without proper ownership')
-        messages.warning("Insufficient permissions to delete the file!")
+        messages.warning(
+            request, "Insufficient permissions to delete the file!")
 
         return redirect('view-repo')
 
     if request.method == "POST":
         if request.POST.get("confirmation") == "confirm":
+            logger.info(
+                f'User {request.user.username} deleted file { file.name }')
+            messages.info(request, f"File { file.name } deleted!")
             file.delete()
+
 
         return redirect('view-folder', folder.id)
     else:
@@ -285,6 +295,7 @@ def rename_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
     heir_data = HeirData.objects.filter(folder=folder).first()
     parent = heir_data.parent
+    prev_name = folder.name
 
     if folder.owner != request.user:
         logger.warning(
@@ -301,7 +312,11 @@ def rename_folder(request, folder_id):
     if request.method == "POST":
         form = FolderRenameForm(request.POST, instance=folder)
         if form.is_valid():
-            form.save()
+            folder = form.save()
+
+            logger.info(
+                f'User {request.user.username} renamed folder { prev_name } to { folder.name }')
+            messages.info(f"Folder { prev_name } renamed to { folder.name }!")
             
         return redirect('view-folder', parent.id)
 
@@ -317,18 +332,25 @@ def rename_folder(request, folder_id):
 def rename_file(request, file_id):
     file = File.objects.get(pk=file_id)
     folder = file.folder
+    prev_name = file.name
 
     if file.owner != request.user:
         logger.warning(
             f'User {request.user.username} tried to rename file { file.name } without proper ownership')
-        messages.warning("Insufficient permissions to rename the file!")
+        messages.warning(
+            request, "Insufficient permissions to rename the file!")
 
         return redirect('view-repo')
 
     if request.method == "POST":
         form = FileRenameForm(request.POST, instance=file)
         if form.is_valid():
-            form.save()
+            file = form.save()
+
+            logger.info(
+                f'User {request.user.username} renamed folder { prev_name } to { file.name }')
+            messages.info(
+                request, f"Folder { prev_name } renamed to { folder.name }!")
 
         return redirect('view-folder', folder.id)
 
