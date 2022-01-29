@@ -279,6 +279,7 @@ def delete_file(request, file_id):
             "action": "Confirm File Delete"
         })
 
+# DONE
 @login_required
 def rename_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
@@ -311,6 +312,7 @@ def rename_folder(request, folder_id):
             "form": form
         })
 
+# DONE
 @login_required
 def rename_file(request, file_id):
     file = File.objects.get(pk=file_id)
