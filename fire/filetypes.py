@@ -3,7 +3,7 @@ Add the file extensions and their corresponding categories here
 '''
 TYPES = {
     "video": [
-        "mp4", "mkv", "webm"
+        "mp4", "mkv", "webm", "mov"
     ],
 
     "text": [

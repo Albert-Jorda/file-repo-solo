@@ -1,4 +1,3 @@
-from distutils import extension
 from fire.filetypes import TYPES
 
 def determine_category(filename: str) -> str:
@@ -13,3 +12,9 @@ def determine_category(filename: str) -> str:
             break
 
     return result
+
+def mapper(category_name: str) -> tuple:
+    return (category_name, category_name.capitalize())
+
+def get_choices_mapped()-> list[tuple]:
+    return map(mapper, TYPES.keys())

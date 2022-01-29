@@ -1,7 +1,10 @@
+from random import choices
 from django.db import models
 from django.utils import timezone
 from fire.settings import AUTH_USER_MODEL
 from django.contrib.auth.models import AbstractUser
+from repo.helpers import get_choices_mapped
+
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
@@ -33,8 +36,9 @@ class HeirData(models.Model):
 
 
 class File(models.Model):
+    category_choices = get_choices_mapped()
     name = models.CharField(max_length=255, blank=False)
-    category = models.CharField(max_length=64, blank=False)
+    category = models.CharField(max_length=64, blank=False, choices=category_choices)
     owner = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="files")
     uploaded_at = models.DateTimeField(default=timezone.now)
     folder = models.ForeignKey(Folder, on_delete=models.CASCADE, related_name="files")
