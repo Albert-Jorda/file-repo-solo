@@ -9,17 +9,23 @@
     <br />
 {% endif %}
 
-{% for child in children %}
+{% for folder in children %}
     <span>
-        <a href="{% url 'view-folder' child.id %}">{{ child.name }} &gt;&gt;</a>
+        <a href="{% url 'view-folder' folder.id %}">{{ folder.name }} &gt;&gt;</a>
+        {% if current.is_root %}
+            &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'rename-folder' folder.id %}">Rename</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'delete-folder' folder.id %}">Delete</a>
+        {% endif %}
     </span>
     <br />
 {% endfor %}
 
-
 {% for file in files %}
     <span>
-        <a href="{% url 'view-file' file.id %}" target="_blank">{{ file.name }}</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ file.file.url }}" download>Save</a>
+        <a href="{% url 'view-file' file.id %}" target="_blank">{{ file.name }}</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ file.file.url }}" download>Save</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'rename-file' file.id %}">Rename</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'delete-file' file.id %}">Delete</a>
     </span>
     <br />
 {% endfor %}

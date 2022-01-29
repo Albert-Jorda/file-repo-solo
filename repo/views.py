@@ -326,7 +326,7 @@ def rename_file(request, file_id):
 
     else:
         form = FileRenameForm(instance=file)
-        return render(request, CONFIRMATION_TEMPLATE, {
+        return render(request, FORM_TEMPLATE, {
             "action": "Rename File",
             "form": form
         })

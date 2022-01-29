@@ -26,6 +26,8 @@ urlpatterns = [
     path('repo/create/folder/<int:parent_folder_id>', views.create_folder, name='create-folder'),
     path('repo/delete/folder/<int:folder_id>', views.delete_folder, name='delete-folder'),
     path('repo/delete/file/<int:file_id>', views.delete_file, name='delete-file'),
+    path('repo/rename/folder/<int:folder_id>', views.rename_folder, name='rename-folder'),
+    path('repo/rename/file/<int:file_id>', views.rename_file, name='rename-file'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
