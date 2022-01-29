@@ -1,7 +1,7 @@
 '''
 Add the file extensions and their corresponding categories here
 '''
-CATEGORIES = {
+CATEGORIES_MAP = {
     "video": [
         "mp4", "mkv", "webm", "mov"
     ],
@@ -24,3 +24,4 @@ CATEGORIES = {
 }
 
 DEFAULT_CATEGORY = "others"
+CATEGORIES = CATEGORIES_MAP.keys()
