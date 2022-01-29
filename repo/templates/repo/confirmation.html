@@ -1,0 +1,14 @@
+{% extends "repo/layout.html" %}
+{% block content %}      
+{% load crispy_forms_tags %}
+
+<div class="container py-5">
+  <h1>{{action}}</h1>
+  <form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="confirm" name="confirmation">
+    <input type="submit" value="deny" name="confirmation">
+  </form>
+</div>
+
+{% endblock %}
