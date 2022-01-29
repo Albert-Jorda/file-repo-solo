@@ -2,6 +2,8 @@
 {% block content %}      
 {% load crispy_forms_tags %}
 
+<h1>{{ current.name }}</h1>
+
 {% if parent %}
     <span>
         <a href="{% url 'view-folder' parent.id %}">&lt;&lt; {{ parent.name }}</a>
