@@ -1,4 +1,3 @@
-from random import choices
 from django.db import models
 from django.utils import timezone
 from fire.settings import AUTH_USER_MODEL
