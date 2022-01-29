@@ -1,13 +1,13 @@
-from fire.filetypes import TYPES
+from fire.categories import CATEGORIES, DEFAULT_CATEGORY
 
 def determine_category(filename: str) -> str:
     splitted = filename.split('.')
     fileExtension = splitted[len(splitted) - 1]
-    categories = TYPES.keys()
-    result = "others"
+    categories = CATEGORIES.keys()
+    result = DEFAULT_CATEGORY
 
     for category in categories:
-        if fileExtension in TYPES[category]:
+        if fileExtension in CATEGORIES[category]:
             result = category
             break
 
@@ -16,5 +16,7 @@ def determine_category(filename: str) -> str:
 def mapper(category_name: str) -> tuple:
     return (category_name, category_name.capitalize())
 
-def get_choices_mapped()-> list[tuple]:
-    return map(mapper, TYPES.keys())
+def get_category_choices_mapped()-> list[tuple]:
+    result: list = list(map(mapper, CATEGORIES.keys()))
+    result.append((DEFAULT_CATEGORY, DEFAULT_CATEGORY.capitalize()))
+    return result

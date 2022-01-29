@@ -1,7 +1,7 @@
 '''
 Add the file extensions and their corresponding categories here
 '''
-TYPES = {
+CATEGORIES = {
     "video": [
         "mp4", "mkv", "webm", "mov"
     ],
@@ -20,5 +20,7 @@ TYPES = {
 
     "document": [
         "pdf", "docx", "pptx"
-    ]
+    ],
 }
+
+DEFAULT_CATEGORY = "others"

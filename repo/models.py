@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from fire.settings import AUTH_USER_MODEL
 from django.contrib.auth.models import AbstractUser
-from repo.helpers import get_choices_mapped
+from repo.helpers import get_category_choices_mapped
 
 
 class User(AbstractUser):
@@ -35,7 +35,7 @@ class HeirData(models.Model):
 
 
 class File(models.Model):
-    category_choices = get_choices_mapped()
+    category_choices = get_category_choices_mapped()
     name = models.CharField(max_length=255, blank=False)
     category = models.CharField(max_length=64, blank=False, choices=category_choices)
     owner = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="files")
