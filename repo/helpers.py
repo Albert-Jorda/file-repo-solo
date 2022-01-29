@@ -13,7 +13,7 @@ def determine_category(filename: str) -> str:
     return result
 
 
-def get_category_choices_mapped() -> list[tuple]:
+def get_category_choices_mapped() -> list[tuple[str, str]]:
     result: list = list(map(lambda str: (str, str.capitalize()),CATEGORIES))
     result.append((DEFAULT_CATEGORY, DEFAULT_CATEGORY.capitalize()))
     return result
