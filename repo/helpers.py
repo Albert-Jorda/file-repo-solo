@@ -12,10 +12,8 @@ def determine_category(filename: str) -> str:
 
     return result
 
-def mapper(category_name: str) -> tuple:
-    return (category_name, category_name.capitalize())
 
-def get_category_choices_mapped()-> list[tuple]:
-    result: list = list(map(mapper, CATEGORIES.keys()))
+def get_category_choices_mapped() -> list[tuple]:
+    result: list = list(map(lambda str: (str, str.capitalize()),CATEGORIES))
     result.append((DEFAULT_CATEGORY, DEFAULT_CATEGORY.capitalize()))
     return result
