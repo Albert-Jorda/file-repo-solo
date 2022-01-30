@@ -1,36 +1,49 @@
 {% extends "repo/layout.html" %}
-{% block content %}      
+{% block content %}
 {% load crispy_forms_tags %}
 
 <h1>{{ current.name }}</h1>
 
-{% if parent %}
-    <span>
-        <a href="{% url 'view-folder' parent.id %}">&lt;&lt; {{ parent.name }}</a>
-    </span>
-    <br />
-{% endif %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
 
-{% for folder in children %}
-    <span>
-        <a href="{% url 'view-folder' folder.id %}">{{ folder.name }} &gt;&gt;</a>
-        {% if current.is_root %}
-            &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'rename-folder' folder.id %}">Rename</a>
-            &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'delete-folder' folder.id %}">Delete</a>
+        {% if parent %}
+        <tr data-url="{% url 'view-folder' parent.id %}" class="folder">
+            <td> {{ parent.name }} </td>
+            <td></td>
+        </tr>
         {% endif %}
-    </span>
-    <br />
-{% endfor %}
 
-{% for file in files %}
-    <span>
-        <a href="{% url 'view-file' file.id %}" target="_blank">{{ file.name }}</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ file.file.url }}" download>Save</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'rename-file' file.id %}">Rename</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'delete-file' file.id %}">Delete</a>
-    </span>
-    <br />
-{% endfor %}
+        {% for folder in children %}
+        <tr data-url="{% url 'view-folder' folder.id %}" class="folder">
+            <td> {{ folder.name }} </td>
+            <td>
+                {% if current.is_root %}
+                <a href="{% url 'rename-folder' folder.id %}">Rename</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'delete-folder' folder.id %}">Delete</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+
+        {% for file in files %}
+        <tr data-url="{% url 'view-file' file.id %}" class="file">
+            <td> {{ file.name }} </td>
+            <td>
+                <a href="{{ file.file.url }}" download>Save</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'rename-file' file.id %}">Rename</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'delete-file' file.id %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% if current %}
 <br />
