@@ -43,13 +43,13 @@ def login_request(request):
 
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
-        username = form['username'].value()
+        username: str = form['username'].value()
         password = form['password'].value()
         if(auth_attempt(username, password)):
             return redirect("index")
         else:
             try:
-                email_attempt = User.objects.get(email=username)
+                email_attempt = User.objects.get(email=username.lower())
                 if(auth_attempt(email_attempt.username, password)):
                     return redirect("index")
             except:
@@ -69,8 +69,9 @@ def register_request(request):
         form = RegistrationForm(data=request.POST)
 
         if form.is_valid():
-            user = form.save()
-
+            user: User = form.save(commit=False)
+            user.email = user.email.lower()
+            user.save()
             logger.info(f'User "{ user.username }" created.')
             messages.info(request, f"{user.username} is created!")
 
