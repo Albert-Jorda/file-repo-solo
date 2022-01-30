@@ -164,7 +164,7 @@ def view_repo(request):
 def view_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
 
-    if folder.owner != request.user:
+    if folder.owner != request.user and not folder.is_shared:
         logger.warning(
             f'User {request.user.username} tried to view unshared folder { folder.name } without proper ownership')
         messages.warning(
