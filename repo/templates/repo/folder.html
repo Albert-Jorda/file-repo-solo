@@ -3,26 +3,42 @@
 {% load crispy_forms_tags %}
 
 <h1>{{ current.name }}</h1>
+{{request.GET.folder_id}}
+{% if files %}
+<label for="categories">Category</label>
+<select name="categories" id="categories">
+    <option value="all">all</option>
+    {% for category in categories %}
+    <option value="{{ category }}" data-url="{% url 'view-folder' current.id category %}">{{ category }}</option>
+    {% endfor %}
+</select>
+{% endif %}
 
 <table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Uploaded at</th>
             <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>
 
         {% if parent %}
-        <tr data-url="{% url 'view-folder' parent.id %}" class="folder">
+        <tr data-url="{% url 'view-folder' parent.id 'all'%}" class="folder">
             <td> {{ parent.name }} </td>
+            <td></td>
+            <td></td>
             <td></td>
         </tr>
         {% endif %}
 
         {% for folder in children %}
-        <tr data-url="{% url 'view-folder' folder.id %}" class="folder">
+        <tr data-url="{% url 'view-folder' folder.id 'all'%}" class="folder">
             <td> {{ folder.name }} </td>
+            <td></td>
+            <td></td>
             <td>
                 {% if current.is_root %}
                 <a href="{% url 'rename-folder' folder.id %}">Rename</a>
@@ -35,6 +51,8 @@
         {% for file in files %}
         <tr data-url="{% url 'view-file' file.id %}" class="file">
             <td> {{ file.name }} </td>
+            <td> {{ file.category }} </td>
+            <td> {{ file.uploaded_at }} </td>
             <td>
                 <a href="{{ file.file.url }}" download>Save</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'rename-file' file.id %}">Rename</a>

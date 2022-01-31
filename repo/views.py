@@ -1,5 +1,6 @@
+from unicodedata import category
 from django.http import FileResponse
-from django.shortcuts import  render, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -21,10 +22,14 @@ CONFIRMATION_TEMPLATE = "repo/confirmation.html"
 # Create your views here.
 
 # DONE
+
+
 def index(request):
     return render(request, "repo/index.html", {})
 
 # DONE
+
+
 def login_request(request):
     form = AuthenticationForm()
 
@@ -54,8 +59,9 @@ def login_request(request):
                     return redirect("index")
             except:
                 pass
-        
-        logger.warning(f'Failed Login Attempt: User not found (Username or Email = "{ username }")')
+
+        logger.warning(
+            f'Failed Login Attempt: User not found (Username or Email = "{ username }")')
 
     return render(request, FORM_TEMPLATE, {
         "action": "Login",
@@ -63,6 +69,8 @@ def login_request(request):
     })
 
 # DONE
+
+
 def register_request(request):
     form = RegistrationForm()
     if request.method == "POST":
@@ -76,7 +84,7 @@ def register_request(request):
 
             # Give user a root folder on registration
             new_root_folder = Folder(
-                owner=user, 
+                owner=user,
                 name="root",
                 is_root=True
             )
@@ -85,7 +93,7 @@ def register_request(request):
             return redirect("index")
 
         logger.warning(f"Invalid form submit on registration.")
-        messages.error(request,"Invalid post data.")
+        messages.error(request, "Invalid post data.")
 
     return render(request, FORM_TEMPLATE, {
         "action": "Register",
@@ -93,6 +101,8 @@ def register_request(request):
     })
 
 # DONE
+
+
 @login_required
 def logout_request(request):
     logger.info(f'User "{ request.user.username }" logged out.')
@@ -100,6 +110,8 @@ def logout_request(request):
     return redirect('index')
 
 # DONE
+
+
 @login_required
 def upload_file(request):
     form = FileUploadForm(request.user)
@@ -113,12 +125,14 @@ def upload_file(request):
             new_file.category = determine_category(new_file.file.name)
             new_file.save()
 
-            logger.info(f"{ request.user.username } uploaded { new_file.file.name }")
+            logger.info(
+                f"{ request.user.username } uploaded { new_file.file.name }")
 
             messages.info(request, f"{ new_file.file.name } is uploaded!")
             return redirect('view-folder', new_file.folder.id)
 
-        logger.warning(f'Error on uploading file from User "{ request.user.username }"')
+        logger.warning(
+            f'Error on uploading file from User "{ request.user.username }"')
 
     return render(request, FORM_TEMPLATE, {
         "form": form,
@@ -126,6 +140,8 @@ def upload_file(request):
     })
 
 # DONE
+
+
 @login_required
 def upload_file_to_folder(request, folder_id):
     if request.method == "POST":
@@ -143,9 +159,11 @@ def upload_file_to_folder(request, folder_id):
                 f"{ request.user.username } uploaded { new_file.file.name }")
             messages.info(request, f"{ new_file.file.name } is uploaded!")
 
-    return redirect('view-folder', folder_id)
+    return redirect('view-folder', folder_id, 'all')
 
 # DONE
+
+
 @login_required
 def view_repo(request):
     folder = Folder.objects.get(owner=request.user, is_root=True)
@@ -160,8 +178,10 @@ def view_repo(request):
     })
 
 # DONE
+
+
 @login_required
-def view_folder(request, folder_id):
+def view_folder(request, folder_id, category="all"):
     folder = Folder.objects.get(pk=folder_id)
 
     if folder.owner != request.user:
@@ -181,8 +201,14 @@ def view_folder(request, folder_id):
         children.append(child.folder)
 
     parent = heir_data_parent.parent if heir_data_parent else None
-    
+
     files = File.objects.filter(folder=folder)
+    if category != "all":
+        files = File.objects.filter(folder=folder, category=category)
+
+    # files = File.objects.filter(folder=folder).order_by('name')[0:]
+
+    categories = File.objects.values_list('category', flat=True)
 
     return render(request, FOLDER_VIEW_TEMPLATE, {
         "action": "View Repo",
@@ -190,11 +216,15 @@ def view_folder(request, folder_id):
         "parent": parent,
         "children": children,
         "files": files,
-        "upload_form": form
+        "upload_form": form,
+        "categories": categories,
+        "category": category,
     })
 
 # DONE
-@login_required
+
+
+@ login_required
 def create_folder(request, parent_folder_id):
     if request.method == "POST":
         parent = Folder.objects.get(pk=parent_folder_id)
@@ -210,17 +240,20 @@ def create_folder(request, parent_folder_id):
         new_folder.save()
         new_heir_data.save()
 
-        logger.info(f'User "{ request.user.username }" created folder  "{ folder_name }"')
+        logger.info(
+            f'User "{ request.user.username }" created folder  "{ folder_name }"')
         messages.info(request, f"{ folder_name } is created!")
 
-        return redirect('view-folder', parent_folder_id)
+        return redirect('view-folder', parent_folder_id, 'all')
 
     logger.error(f"Unhandled error on create folder request")
     messages.error(request, "Something went wrong.")
-    return redirect('view-folder', parent_folder_id)
+    return redirect('view-folder', parent_folder_id, 'all')
 
 # DONE
-@login_required
+
+
+@ login_required
 def view_file(request, file_id):
     file = File.objects.get(pk=file_id)
 
@@ -235,7 +268,9 @@ def view_file(request, file_id):
     return response
 
 # DONE
-@login_required
+
+
+@ login_required
 def delete_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
     heir_data = HeirData.objects.filter(folder=folder).first()
@@ -244,7 +279,8 @@ def delete_folder(request, folder_id):
     if folder.owner != request.user:
         logger.warning(
             f'User {request.user.username} tried to delete folder { folder.name } without proper ownership')
-        messages.warning(request, "Insufficient permissions to delete the folder!")
+        messages.warning(
+            request, "Insufficient permissions to delete the folder!")
         return redirect('view-repo')
 
     if request.method == "POST":
@@ -253,16 +289,17 @@ def delete_folder(request, folder_id):
                 f'User {request.user.username} deleted folder { folder.name }')
             messages.info(request, f"Folder { folder.name } deleted!")
             folder.delete()
-            
 
-        return redirect('view-folder', parent.id)
+        return redirect('view-folder', parent.id, 'all')
     else:
         return render(request, CONFIRMATION_TEMPLATE, {
             "action": "Confirm Folder Delete"
         })
 
 # DONE
-@login_required
+
+
+@ login_required
 def delete_file(request, file_id):
     file = File.objects.get(pk=file_id)
     folder = file.folder
@@ -282,7 +319,6 @@ def delete_file(request, file_id):
             messages.info(request, f"File { file.name } deleted!")
             file.delete()
 
-
         return redirect('view-folder', folder.id)
     else:
         return render(request, CONFIRMATION_TEMPLATE, {
@@ -290,7 +326,9 @@ def delete_file(request, file_id):
         })
 
 # DONE
-@login_required
+
+
+@ login_required
 def rename_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
     heir_data = HeirData.objects.filter(folder=folder).first()
@@ -317,8 +355,9 @@ def rename_folder(request, folder_id):
 
             logger.info(
                 f'User {request.user.username} renamed folder { prev_name } to { folder.name }')
-            messages.info(request, f"Folder { prev_name } renamed to { folder.name }!")
-            
+            messages.info(
+                request, f"Folder { prev_name } renamed to { folder.name }!")
+
         return redirect('view-folder', parent.id)
 
     else:
@@ -329,7 +368,9 @@ def rename_folder(request, folder_id):
         })
 
 # DONE
-@login_required
+
+
+@ login_required
 def rename_file(request, file_id):
     file = File.objects.get(pk=file_id)
     folder = file.folder
