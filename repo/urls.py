@@ -15,7 +15,7 @@ urlpatterns = [
 
     # File/Folder views
     path('repo/view', views.view_repo, name='view-repo'),
-    path('repo/view/folder/<int:folder_id>/<str:category>',
+    path('repo/view/folder/<int:folder_id>',
          views.view_folder, name='view-folder'),
     path('repo/view/file/<int:file_id>', views.view_file, name='view-file'),
 

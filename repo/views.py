@@ -1,3 +1,4 @@
+from msilib import sequence
 from unicodedata import category
 from django.http import FileResponse
 from django.shortcuts import render, redirect
@@ -159,7 +160,7 @@ def upload_file_to_folder(request, folder_id):
                 f"{ request.user.username } uploaded { new_file.file.name }")
             messages.info(request, f"{ new_file.file.name } is uploaded!")
 
-    return redirect('view-folder', folder_id, 'all')
+    return redirect('view-folder', folder_id)
 
 # DONE
 
@@ -181,7 +182,7 @@ def view_repo(request):
 
 
 @login_required
-def view_folder(request, folder_id, category="all"):
+def view_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
 
     if folder.owner != request.user:
@@ -203,10 +204,33 @@ def view_folder(request, folder_id, category="all"):
     parent = heir_data_parent.parent if heir_data_parent else None
 
     files = File.objects.filter(folder=folder)
-    if category != "all":
+
+    category = request.GET.get('category', '')
+    orderBy = request.GET.get('order_by', '')
+    sequence = request.GET.get('sequence', '')
+    search = request.GET.get('search', '')
+
+    if category:
         files = File.objects.filter(folder=folder, category=category)
 
-    # files = File.objects.filter(folder=folder).order_by('name')[0:]
+    if orderBy:
+        files = File.objects.filter(folder=folder).order_by(orderBy)
+
+    if search:
+        files = File.objects.filter(folder=folder, name__icontains=search)
+
+    if sequence:
+        files = File.objects.filter(folder=folder).order_by(
+            'uploaded_at' if sequence == 'increasing' else '-uploaded_at')
+        if category:
+            files = File.objects.filter(
+                folder=folder, category=category).order_by('category' if sequence == 'increasing' else '-category')
+        if orderBy:
+            files = File.objects.filter(folder=folder).order_by(
+                orderBy if sequence == 'increasing' else f'-{orderBy}')
+        if search:
+            files = File.objects.filter(folder=folder, name__icontains=search).order_by(
+                'name' if sequence == 'increasing' else '-name')
 
     categories = File.objects.values_list('category', flat=True)
 
@@ -218,7 +242,8 @@ def view_folder(request, folder_id, category="all"):
         "files": files,
         "upload_form": form,
         "categories": categories,
-        "category": category,
+        "order_by": ['name', 'category', 'uploaded_at'],
+        "sequences": ['increasing', 'decreasing']
     })
 
 # DONE
@@ -244,11 +269,11 @@ def create_folder(request, parent_folder_id):
             f'User "{ request.user.username }" created folder  "{ folder_name }"')
         messages.info(request, f"{ folder_name } is created!")
 
-        return redirect('view-folder', parent_folder_id, 'all')
+        return redirect('view-folder', parent_folder_id)
 
     logger.error(f"Unhandled error on create folder request")
     messages.error(request, "Something went wrong.")
-    return redirect('view-folder', parent_folder_id, 'all')
+    return redirect('view-folder', parent_folder_id)
 
 # DONE
 
@@ -290,7 +315,7 @@ def delete_folder(request, folder_id):
             messages.info(request, f"Folder { folder.name } deleted!")
             folder.delete()
 
-        return redirect('view-folder', parent.id, 'all')
+        return redirect('view-folder', parent.id)
     else:
         return render(request, CONFIRMATION_TEMPLATE, {
             "action": "Confirm Folder Delete"
