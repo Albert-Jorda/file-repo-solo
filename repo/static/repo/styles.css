@@ -1,0 +1,4 @@
+tr.folder:hover,
+tr.file:hover {
+    cursor: pointer;
+}
