@@ -3,11 +3,67 @@
 {% load crispy_forms_tags %}
 
 <h1>{{ current.name }}</h1>
+<!-- by category -->
+{% if files %}
+<label for="categories">Category: </label>
+<select name="categories" id="categories">
+    <option value="all" data-url="{% url 'view-folder' current.id  %}?category=">all</option>
+    {% for category in categories %}
+    {% if request.GET.category == category %}
+    <option value="{{ category }}" data-url="{% url 'view-folder' current.id  %}?category={{category}}" selected>{{ category }}</option>
+    {% else %}
+    <option value="{{ category }}" data-url="{% url 'view-folder' current.id  %}?category={{category}}">{{ category }}</option>
+    {% endif %}
+    {% endfor %}
+</select>
 
+<!-- end by category -->
+
+<!-- sorting -->
+<label for="order_by">Order By: </label>
+<select name="order_by" id="order_by">
+    {% for order in order_by%}
+    {% if request.GET.order_by == order %}
+    <option value="{{ order }}" data-url="{% url 'view-folder' current.id  %}?order_by={{order}}&sequence=increasing" selected>{{ order }}</option>
+    {% else %}
+    <option value="{{ order }}" data-url="{% url 'view-folder' current.id  %}?order_by={{order}}&sequence=increasing">{{ order }}</option>
+    {% endif %}
+    {% endfor %}
+</select>
+<!-- end sorting -->
+
+<!-- sequence -->
+<label for="sequence">Sequence: </label>
+<select name="sequence" id="sequence">
+    {% for sequence in sequences %}
+    {% if request.GET.sequence == sequence%}
+    <option value="{{sequence}}" data-url="{% url 'view-folder' current.id  %}?order_by={{request.GET.order_by}}&category={{request.GET.category}}&search={{request.GET.search}}&sequence={{sequence}}" selected>{{sequence}}</option>
+    {% else %}
+    <option value="{{sequence}}" data-url="{% url 'view-folder' current.id  %}?order_by={{request.GET.order_by}}&category={{request.GET.category}}&search={{request.GET.search}}&sequence={{sequence}}">{{sequence}}</option>
+    {% endif %}
+    {% endfor %}
+</select>
+<!-- end sequence -->
+
+<!-- search -->
+<form class="form-inline my-2 my-lg-0" action="{% url 'view-folder' current.id  %}">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search" list="search_list" name="search" value={{request.GET.search}}>
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+<datalist id="search_list">
+    {% for file in filesList %}
+    <option value="{{file.name}}"></option>
+    {% endfor%}
+</datalist>
+<!-- end search -->
+{% endif %}
 <table class="table table-striped">
     <thead>
         <tr>
             <th scope="col">Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Uploaded at</th>
             <th scope="col">Action</th>
         </tr>
     </thead>
@@ -17,12 +73,16 @@
         <tr data-url="{% url 'view-folder' parent.id %}" class="folder">
             <td> {{ parent.name }} </td>
             <td></td>
+            <td></td>
+            <td></td>
         </tr>
         {% endif %}
 
         {% for folder in children %}
         <tr data-url="{% url 'view-folder' folder.id %}" class="folder">
             <td> {{ folder.name }} </td>
+            <td></td>
+            <td></td>
             <td>
                 {% if current.is_root %}
                 <a href="{% url 'rename-folder' folder.id %}">Rename</a>
@@ -35,6 +95,8 @@
         {% for file in files %}
         <tr data-url="{% url 'view-file' file.id %}" class="file">
             <td> {{ file.name }} </td>
+            <td> {{ file.category }} </td>
+            <td> {{ file.uploaded_at }} </td>
             <td>
                 <a href="{{ file.file.url }}" download>Save</a>
                 &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'rename-file' file.id %}">Rename</a>
