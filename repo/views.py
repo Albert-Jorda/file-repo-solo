@@ -233,6 +233,7 @@ def view_folder(request, folder_id):
                 'name' if sequence == 'increasing' else '-name')
 
     categories = File.objects.values_list('category', flat=True)
+    filesList = File.objects.filter(folder=folder)
 
     return render(request, FOLDER_VIEW_TEMPLATE, {
         "action": "View Repo",
@@ -243,7 +244,8 @@ def view_folder(request, folder_id):
         "upload_form": form,
         "categories": categories,
         "order_by": ['name', 'category', 'uploaded_at'],
-        "sequences": ['increasing', 'decreasing']
+        "sequences": ['increasing', 'decreasing'],
+        "filesList": filesList,
     })
 
 # DONE
