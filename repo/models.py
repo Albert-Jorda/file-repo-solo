@@ -58,24 +58,3 @@ class File(models.Model):
 
     def __str__(self):
         return self.file.name
-
-    # filter by category
-    def get_all_categories(self):
-        return self.objects.values_list('category')
-
-    def get_by_category(self, category):
-        return self.objects.filter(category=category)
-
-    # sorting
-    # order_by[name, category, upload_date]
-    def increasing(self, order_by):
-        return self.objects.all().order_by(order_by)[0:]
-
-    def decreasing(self, order_by):
-        return self.objects.all().order_by(order_by)[:0]
-
-    # search
-    def search(self, search_term):
-        fields = [self.name, self.category, self.uploaded_at]
-        queries = [Q(**{f + "__icontains": search_term}) for f in fields]
-        return queries
