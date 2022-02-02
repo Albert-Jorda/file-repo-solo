@@ -31,4 +31,15 @@
     </form>
 </div>
 
+<img src="{{ request.user.image.url }}" />
+<div class="container py-5">
+    <h1>{{action3}}</h1>
+    <!-- if you plan to to make a for loop to render the forms, just add an if for the enctype (refer to form.html) -->
+    <form method="POST" action="{% url 'change-image' %}" enctype=multipart/form-data>
+        {% csrf_token %}
+        {{ form3|crispy }}
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+</div>
+
 {% endblock %}
