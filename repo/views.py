@@ -429,6 +429,8 @@ def rename_file(request, file_id):
             "form": form
         })
 
+# DONE
+
 
 @login_required
 def view_profile(request):
@@ -450,6 +452,7 @@ def change_password(request):
                 user.set_password(form['new_password'].value())
                 user.save()
     return redirect('view-profile')
+# DONE
 
 
 @login_required
@@ -467,6 +470,7 @@ def change_username(request):
                     user.save()
 
     return redirect('view-profile')
+# DONE
 
 
 @login_required
