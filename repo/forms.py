@@ -37,9 +37,27 @@ class FolderCreationForm(forms.ModelForm):
         model = Folder
         fields = ['name']
 
+
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(help_text='Required', required=True)
 
     class Meta:
         model = get_user_model()
         fields = ['username', 'email', 'password1', 'password2']
+
+
+class ChangePassWordForm(forms.Form):
+    old_password = forms.CharField(widget=forms.PasswordInput)
+    new_password = forms.CharField(widget=forms.PasswordInput)
+    confirm_new_password = forms.CharField(widget=forms.PasswordInput)
+
+
+class ChangeUsernameForm(forms.Form):
+    new_username = forms.CharField()
+    # ask password for confirmation
+    password = forms.CharField(widget=forms.PasswordInput)
+
+
+class ChangeEmailForm(forms.Form):
+    new_email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
