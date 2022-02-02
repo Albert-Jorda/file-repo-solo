@@ -35,6 +35,12 @@ urlpatterns = [
          views.rename_folder, name='rename-folder'),
     path('repo/rename/file/<int:file_id>',
          views.rename_file, name='rename-file'),
+
+    # Profile
+    path('profile/', views.view_profile, name="view-profile"),
+    path('profile/changepassword', views.change_password, name='change-password'),
+    path('profile/changeusername', views.change_username, name='change-username'),
+    path('profile/changeemail', views.change_email, name='change-email')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
