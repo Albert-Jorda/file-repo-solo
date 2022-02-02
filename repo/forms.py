@@ -61,3 +61,9 @@ class ChangeUsernameForm(forms.Form):
 class ChangeEmailForm(forms.Form):
     new_email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class ChangeImageForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ['image']

@@ -40,7 +40,8 @@ urlpatterns = [
     path('profile/', views.view_profile, name="view-profile"),
     path('profile/changepassword', views.change_password, name='change-password'),
     path('profile/changeusername', views.change_username, name='change-username'),
-    path('profile/changeemail', views.change_email, name='change-email')
+    path('profile/changeemail', views.change_email, name='change-email'),
+    path('profile/changeimage', views.change_image, name='change-image')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

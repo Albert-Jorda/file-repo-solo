@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-from repo.forms import ChangeEmailForm, FileUploadForm, FileUploadToFolderForm, RegistrationForm, FolderRenameForm, FileRenameForm, ChangePassWordForm, ChangeUsernameForm, ChangeEmailForm
+from repo.forms import ChangeEmailForm, FileUploadForm, FileUploadToFolderForm, RegistrationForm, FolderRenameForm, FileRenameForm, ChangePassWordForm, ChangeUsernameForm, ChangeEmailForm, ChangeImageForm
 from repo.models import Folder, File, HeirData, User
 from repo.helpers import determine_category
 import logging
@@ -381,7 +381,7 @@ def rename_folder(request, folder_id):
             "form": form
         })
 
-    
+
 # DONE
 @ login_required
 def rename_file(request, file_id):
@@ -416,19 +416,28 @@ def rename_file(request, file_id):
             "form": form
         })
 
+
 # DONE
-
-
 @login_required
 def view_profile(request):
     form = ChangePassWordForm()
     form1 = ChangeUsernameForm()
     form2 = ChangeEmailForm()
-    return render(request, PROFILE_VIEW_TEMPLATE, {'action': 'Change Password', 'form': form, 'action1': 'Change Username', 'form1': form1, 'action2': 'Change Email', 'form2': form2})
+    form3 = ChangeImageForm()
+    return render(request, PROFILE_VIEW_TEMPLATE, {
+        'action': 'Change Password',
+        'form': form,
+        'action1': 'Change Username',
+        'form1': form1,
+        'action2': 'Change Email',
+        'form2': form2,
+        'action3': 'Change Image',
+        'form3': form3
+        }
+    )
+
 
 # DONE
-
-
 @login_required
 def change_password(request):
     user = User.objects.get(pk=request.user.id)
@@ -439,9 +448,9 @@ def change_password(request):
                 user.set_password(form['new_password'].value())
                 user.save()
     return redirect('view-profile')
+
+
 # DONE
-
-
 @login_required
 def change_username(request):
     user = User.objects.get(pk=request.user.id)
@@ -457,9 +466,9 @@ def change_username(request):
                     user.save()
 
     return redirect('view-profile')
+
+
 # DONE
-
-
 @login_required
 def change_email(request):
     user = User.objects.get(pk=request.user.id)
@@ -473,5 +482,16 @@ def change_email(request):
                     print('here')
                     user.email = form['new_email'].value()
                     user.save()
+
+    return redirect('view-profile')
+
+
+@login_required
+def change_image(request):
+    user = User.objects.get(pk=request.user.id)
+    if request.method == "POST":
+        form = ChangeImageForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
 
     return redirect('view-profile')
