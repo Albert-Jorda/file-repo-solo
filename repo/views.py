@@ -440,7 +440,7 @@ def view_profile(request):
 # DONE
 @login_required
 def change_password(request):
-    user = User.objects.get(pk=request.user.id)
+    user = request.user
     if request.method == "POST":
         form = ChangePassWordForm(request.POST)
         if form.is_valid():
@@ -453,7 +453,7 @@ def change_password(request):
 # DONE
 @login_required
 def change_username(request):
-    user = User.objects.get(pk=request.user.id)
+    user = request.user
     if request.method == "POST":
         form = ChangeUsernameForm(request.POST)
         if form.is_valid():
@@ -471,7 +471,7 @@ def change_username(request):
 # DONE
 @login_required
 def change_email(request):
-    user = User.objects.get(pk=request.user.id)
+    user = request.user
     if request.method == "POST":
         form = ChangeEmailForm(request.POST)
         if form.is_valid():
@@ -488,7 +488,7 @@ def change_email(request):
 
 @login_required
 def change_image(request):
-    user = User.objects.get(pk=request.user.id)
+    user = request.user
     if request.method == "POST":
         form = ChangeImageForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
