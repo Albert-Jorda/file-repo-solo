@@ -503,11 +503,10 @@ def change_email(request):
 @login_required
 def change_profile_picture(request):
     user = request.user
-    if request.method == "POST" and request.FILES:
-        form = ChangeImageForm(request.POST)
+    if request.method == "POST":
+        form = ChangeImageForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
-            user.image = request.FILES['image']
-            user.save()
+            form.save()
             messages.success(request, 'Profile picture changed successfully!')
         else:
             messages.warning(request, 'Unsuccessful!')
