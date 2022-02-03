@@ -48,6 +48,7 @@ class RegistrationForm(UserCreationForm):
 
 class ChangeUsernameForm(forms.ModelForm):
     new_username = forms.CharField(help_text='Required', required=True)
+    password = forms.CharField(widget=forms.PasswordInput(), required=True)
 
     class Meta:
         model = get_user_model()
@@ -57,6 +58,7 @@ class ChangeUsernameForm(forms.ModelForm):
 class ChangeEmailForm(forms.ModelForm):
     new_email = forms.EmailField(
         help_text='Required', required=True)
+    password = forms.CharField(widget=forms.PasswordInput(), required=True)
 
     class Meta:
         model = get_user_model()
