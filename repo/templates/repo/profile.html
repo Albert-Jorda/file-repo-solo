@@ -12,6 +12,9 @@
 <a href="{% url 'change-email' %}">
     <button type="button" class="btn btn-primary">Change Email</button>
 </a>
+<a href="{% url 'change-profile-picture' %}">
+    <button type="button" class="btn btn-primary">Change Profile Picture</button>
+</a>
 
 <img src="{{ request.user.image.url }}" />
 

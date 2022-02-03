@@ -21,13 +21,15 @@ PROFILE_VIEW_TEMPLATE = "repo/profile.html"
 
 # Create your views here.
 
-
 # DONE
+
+
 def index(request):
     return render(request, "repo/index.html", {})
 
-
 # DONE
+
+
 def login_request(request):
     form = AuthenticationForm()
 
@@ -66,8 +68,9 @@ def login_request(request):
         "form": form
     })
 
-
 # DONE
+
+
 def register_request(request):
     form = RegistrationForm()
     if request.method == "POST":
@@ -98,16 +101,18 @@ def register_request(request):
         "form": form
     })
 
-
 # DONE
+
+
 @login_required
 def logout_request(request):
     logger.info(f'User "{ request.user.username }" logged out.')
     logout(request)
     return redirect('index')
 
-
 # DONE
+
+
 @login_required
 def upload_file(request):
     form = FileUploadForm(request.user)
@@ -135,8 +140,9 @@ def upload_file(request):
         "action": "Upload File"
     })
 
-
 # DONE
+
+
 @login_required
 def upload_file_to_folder(request, folder_id):
     if request.method == "POST":
@@ -156,8 +162,9 @@ def upload_file_to_folder(request, folder_id):
 
     return redirect('view-folder', folder_id)
 
-
 # DONE
+
+
 @login_required
 def view_repo(request):
     folder = Folder.objects.get(owner=request.user, is_root=True)
@@ -171,8 +178,9 @@ def view_repo(request):
         "upload_form": None
     })
 
-
 # DONE
+
+
 @login_required
 def view_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
@@ -240,8 +248,9 @@ def view_folder(request, folder_id):
         "filesList": filesList,
     })
 
-
 # DONE
+
+
 @ login_required
 def create_folder(request, parent_folder_id):
     if request.method == "POST":
@@ -268,8 +277,9 @@ def create_folder(request, parent_folder_id):
     messages.error(request, "Something went wrong.")
     return redirect('view-folder', parent_folder_id)
 
-
 # DONE
+
+
 @ login_required
 def view_file(request, file_id):
     file = File.objects.get(pk=file_id)
@@ -284,8 +294,9 @@ def view_file(request, file_id):
     response = FileResponse(open(filename, 'rb'))
     return response
 
-
 # DONE
+
+
 @ login_required
 def delete_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
@@ -312,8 +323,9 @@ def delete_folder(request, folder_id):
             "action": "Confirm Folder Delete"
         })
 
-
 # DONE
+
+
 @ login_required
 def delete_file(request, file_id):
     file = File.objects.get(pk=file_id)
@@ -340,8 +352,9 @@ def delete_file(request, file_id):
             "action": "Confirm File Delete"
         })
 
-
 # DONE
+
+
 @ login_required
 def rename_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
@@ -381,8 +394,9 @@ def rename_folder(request, folder_id):
             "form": form
         })
 
-
 # DONE
+
+
 @ login_required
 def rename_file(request, file_id):
     file = File.objects.get(pk=file_id)
@@ -416,8 +430,9 @@ def rename_file(request, file_id):
             "form": form
         })
 
-
 # DONE
+
+
 @login_required
 def view_profile(request):
     return render(request, PROFILE_VIEW_TEMPLATE)
@@ -425,7 +440,6 @@ def view_profile(request):
 # DONE
 
 
-# DONE
 @login_required
 def change_password(request):
     if request.method == "POST":
@@ -444,7 +458,6 @@ def change_password(request):
 # DONE
 
 
-# DONE
 @login_required
 def change_username(request):
     user = request.user
@@ -486,3 +499,20 @@ def change_email(request):
         form = ChangeEmailForm()
 
     return render(request, FORM_TEMPLATE, {'action': 'Change Email', 'form': form})
+
+
+@login_required
+def change_profile_picture(request):
+    user = request.user
+    if request.method == "POST" and request.FILES:
+        form = ChangeImageForm(request.POST)
+        if form.is_valid():
+            user.image = request.FILES['image']
+            user.save()
+            messages.success(request, 'Profile picture changed successfully!')
+        else:
+            messages.warning(request, 'Unsuccessful!')
+    else:
+        form = ChangeImageForm()
+
+    return render(request, FORM_TEMPLATE, {'action': 'Change Profile Picture', 'form': form})
