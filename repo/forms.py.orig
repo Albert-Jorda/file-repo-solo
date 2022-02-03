@@ -58,12 +58,18 @@ class ChangeEmailForm(forms.ModelForm):
     new_email = forms.EmailField(
         help_text='Required', required=True)
 
+<<<<<<< HEAD
     class Meta:
         model = get_user_model()
         fields = ['new_email', 'password']
+=======
+class ChangeEmailForm(forms.Form):
+    new_email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
 
 class ChangeImageForm(forms.ModelForm):
     class Meta:
         model = get_user_model()
         fields = ['image']
+>>>>>>> main

@@ -3,10 +3,23 @@ from django.utils import timezone
 from fire.settings import AUTH_USER_MODEL
 from django.contrib.auth.models import AbstractUser
 from repo.helpers import get_category_choices_mapped
+from PIL import Image
 
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
+    image = models.ImageField(
+        default="default.jpg", upload_to='profile-images', blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        img = Image.open(self.image.path)
+
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.image.path)
 
 
 # Create your models here.
