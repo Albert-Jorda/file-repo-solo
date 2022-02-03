@@ -8,7 +8,8 @@ from PIL import Image
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    image = models.ImageField(default="default.jpg", upload_to='profile-images', blank=True, null=True)
+    image = models.ImageField(
+        default="default.jpg", upload_to='profile-images', blank=True, null=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

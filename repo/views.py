@@ -1,10 +1,10 @@
 from django.http import FileResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
-from repo.forms import ChangeEmailForm, FileUploadForm, FileUploadToFolderForm, RegistrationForm, FolderRenameForm, FileRenameForm, ChangePassWordForm, ChangeUsernameForm, ChangeEmailForm, ChangeImageForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from repo.forms import *
 from repo.models import Folder, File, HeirData, User
 from repo.helpers import determine_category
 import logging
@@ -21,13 +21,15 @@ PROFILE_VIEW_TEMPLATE = "repo/profile.html"
 
 # Create your views here.
 
-
 # DONE
+
+
 def index(request):
     return render(request, "repo/index.html", {})
 
-
 # DONE
+
+
 def login_request(request):
     form = AuthenticationForm()
 
@@ -66,8 +68,9 @@ def login_request(request):
         "form": form
     })
 
-
 # DONE
+
+
 def register_request(request):
     form = RegistrationForm()
     if request.method == "POST":
@@ -98,16 +101,18 @@ def register_request(request):
         "form": form
     })
 
-
 # DONE
+
+
 @login_required
 def logout_request(request):
     logger.info(f'User "{ request.user.username }" logged out.')
     logout(request)
     return redirect('index')
 
-
 # DONE
+
+
 @login_required
 def upload_file(request):
     form = FileUploadForm(request.user)
@@ -135,8 +140,9 @@ def upload_file(request):
         "action": "Upload File"
     })
 
-
 # DONE
+
+
 @login_required
 def upload_file_to_folder(request, folder_id):
     if request.method == "POST":
@@ -156,8 +162,9 @@ def upload_file_to_folder(request, folder_id):
 
     return redirect('view-folder', folder_id)
 
-
 # DONE
+
+
 @login_required
 def view_repo(request):
     folder = Folder.objects.get(owner=request.user, is_root=True)
@@ -171,8 +178,9 @@ def view_repo(request):
         "upload_form": None
     })
 
-
 # DONE
+
+
 @login_required
 def view_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
@@ -240,8 +248,9 @@ def view_folder(request, folder_id):
         "filesList": filesList,
     })
 
-
 # DONE
+
+
 @ login_required
 def create_folder(request, parent_folder_id):
     if request.method == "POST":
@@ -268,8 +277,9 @@ def create_folder(request, parent_folder_id):
     messages.error(request, "Something went wrong.")
     return redirect('view-folder', parent_folder_id)
 
-
 # DONE
+
+
 @ login_required
 def view_file(request, file_id):
     file = File.objects.get(pk=file_id)
@@ -284,8 +294,9 @@ def view_file(request, file_id):
     response = FileResponse(open(filename, 'rb'))
     return response
 
-
 # DONE
+
+
 @ login_required
 def delete_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
@@ -312,8 +323,9 @@ def delete_folder(request, folder_id):
             "action": "Confirm Folder Delete"
         })
 
-    
 # DONE
+
+
 @ login_required
 def delete_file(request, file_id):
     file = File.objects.get(pk=file_id)
@@ -340,8 +352,9 @@ def delete_file(request, file_id):
             "action": "Confirm File Delete"
         })
 
-    
 # DONE
+
+
 @ login_required
 def rename_folder(request, folder_id):
     folder = Folder.objects.get(pk=folder_id)
@@ -381,8 +394,9 @@ def rename_folder(request, folder_id):
             "form": form
         })
 
-
 # DONE
+
+
 @ login_required
 def rename_file(request, file_id):
     file = File.objects.get(pk=file_id)
@@ -416,82 +430,89 @@ def rename_file(request, file_id):
             "form": form
         })
 
-
 # DONE
+
+
 @login_required
 def view_profile(request):
-    form = ChangePassWordForm()
-    form1 = ChangeUsernameForm()
-    form2 = ChangeEmailForm()
-    form3 = ChangeImageForm()
-    return render(request, PROFILE_VIEW_TEMPLATE, {
-        'action': 'Change Password',
-        'form': form,
-        'action1': 'Change Username',
-        'form1': form1,
-        'action2': 'Change Email',
-        'form2': form2,
-        'action3': 'Change Image',
-        'form3': form3
-        }
-    )
-
+    return render(request, PROFILE_VIEW_TEMPLATE)
 
 # DONE
+
+
 @login_required
 def change_password(request):
-    user = request.user
     if request.method == "POST":
-        form = ChangePassWordForm(request.POST)
+        form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
-            if user.check_password(form['old_password'].value()) and form['new_password'].value() == form['confirm_new_password'].value():
-                user.set_password(form['new_password'].value())
-                user.save()
-    return redirect('view-profile')
-
-
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(
+                request, 'Your password was successfully updated!')
+            return redirect('change-password')
+        else:
+            messages.error(request, 'Please correct the errors below')
+    else:
+        form = form = PasswordChangeForm(request.user)
+    return render(request, FORM_TEMPLATE, {'action': 'Change Password', 'form': form})
 # DONE
+
+
 @login_required
 def change_username(request):
     user = request.user
     if request.method == "POST":
         form = ChangeUsernameForm(request.POST)
         if form.is_valid():
-            if User.objects.exclude(pk=user.id).filter(username=user).exists():
-                print('exists')
+            if User.objects.exclude(pk=user.id).filter(username=form.cleaned_data['new_username']).exists():
+                messages.warning(request, 'Username already exists!')
             else:
-                if user.check_password(form['password'].value()):
-                    print('here')
-                    user.username = form['new_username'].value()
+                if user.check_password(form.cleaned_data['password']):
+                    user.username = form.cleaned_data['new_username']
                     user.save()
+                    messages.success(request, 'Success!')
+                else:
+                    messages.warning(request, 'Password is incorrect!')
+    else:
+        form = ChangeUsernameForm()
 
-    return redirect('view-profile')
-
-
+    return render(request, FORM_TEMPLATE, {'action': 'Change Username', 'form': form})
 # DONE
-@login_required
+
+
+@ login_required
 def change_email(request):
     user = request.user
     if request.method == "POST":
         form = ChangeEmailForm(request.POST)
         if form.is_valid():
-            if User.objects.exclude(pk=user.id).filter(email=user.email).exists():
-                print('exists')
+            if User.objects.exclude(pk=user.id).filter(email=form.cleaned_data['new_email']).exists():
+                messages.warning(request, 'Email already exists!')
             else:
-                if user.check_password(form['password'].value()):
-                    print('here')
-                    user.email = form['new_email'].value()
+                if user.check_password(form.cleaned_data['password']):
+                    user.email = form.cleaned_data['new_email']
                     user.save()
+                    messages.success(request, 'Success!')
+                else:
+                    messages.warning(request, 'Password is incorrect!')
+    else:
+        form = ChangeEmailForm()
 
-    return redirect('view-profile')
+    return render(request, FORM_TEMPLATE, {'action': 'Change Email', 'form': form})
 
 
 @login_required
-def change_image(request):
+def change_profile_picture(request):
     user = request.user
-    if request.method == "POST":
-        form = ChangeImageForm(request.POST, request.FILES, instance=user)
+    if request.method == "POST" and request.FILES:
+        form = ChangeImageForm(request.POST)
         if form.is_valid():
-            form.save()
+            user.image = request.FILES['image']
+            user.save()
+            messages.success(request, 'Profile picture changed successfully!')
+        else:
+            messages.warning(request, 'Unsuccessful!')
+    else:
+        form = ChangeImageForm()
 
-    return redirect('view-profile')
+    return render(request, FORM_TEMPLATE, {'action': 'Change Profile Picture', 'form': form})

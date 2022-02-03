@@ -37,11 +37,12 @@ urlpatterns = [
          views.rename_file, name='rename-file'),
 
     # Profile
-    path('profile/', views.view_profile, name="view-profile"),
-    path('profile/changepassword', views.change_password, name='change-password'),
-    path('profile/changeusername', views.change_username, name='change-username'),
-    path('profile/changeemail', views.change_email, name='change-email'),
-    path('profile/changeimage', views.change_image, name='change-image')
+    path('profile/change', views.view_profile, name="view-profile"),
+    path('profile/change/password', views.change_password, name='change-password'),
+    path('profile/change/username', views.change_username, name='change-username'),
+    path('profile/change/email', views.change_email, name='change-email'),
+    path('profile/change/profile_picture',
+         views.change_profile_picture, name='change-profile-picture'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
