@@ -1,10 +1,8 @@
-from unicodedata import category
 from django.db import models
 from django.utils import timezone
 from fire.settings import AUTH_USER_MODEL
 from django.contrib.auth.models import AbstractUser
 from repo.helpers import get_category_choices_mapped
-from django.db.models import Q
 
 
 class User(AbstractUser):

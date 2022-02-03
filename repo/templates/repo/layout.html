@@ -37,6 +37,9 @@
 
         {% if user.is_authenticated %}
         <li class="nav-item">
+          <a class="nav-link" href="{% url 'view-profile' %}">Profile</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="{% url 'view-repo' %}">View Repository</a>
         </li>
         <li class="nav-item">

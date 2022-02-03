@@ -3,32 +3,14 @@
 {% load crispy_forms_tags %}
 
 <h1>Profile</h1>
-
-<div class="container py-5">
-    <h1>{{action}}</h1>
-    <form method="POST" action="{% url 'change-password' %}">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button class="btn btn-primary" type="submit">Submit</button>
-    </form>
-</div>
-
-<div class="container py-5">
-    <h1>{{action1}}</h1>
-    <form method="POST" action="{% url 'change-username' %}">
-        {% csrf_token %}
-        {{ form1|crispy }}
-        <button class="btn btn-primary" type="submit">Submit</button>
-    </form>
-</div>
-
-<div class="container py-5">
-    <h1>{{action2}}</h1>
-    <form method="POST" action="{% url 'change-email' %}">
-        {% csrf_token %}
-        {{ form2|crispy }}
-        <button class="btn btn-primary" type="submit">Submit</button>
-    </form>
-</div>
+<a href="{% url 'change-password' %}">
+    <button type="button" class="btn btn-primary">Change Password</button>
+</a>
+<a href="{% url 'change-username' %}">
+    <button type="button" class="btn btn-primary">Change Username</button>
+</a>
+<a href="{% url 'change-email' %}">
+    <button type="button" class="btn btn-primary">Change Email</button>
+</a>
 
 {% endblock %}

@@ -1,10 +1,10 @@
 from django.http import FileResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
-from repo.forms import ChangeEmailForm, FileUploadForm, FileUploadToFolderForm, RegistrationForm, FolderRenameForm, FileRenameForm, ChangePassWordForm, ChangeUsernameForm, ChangeEmailForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from repo.forms import *
 from repo.models import Folder, File, HeirData, User
 from repo.helpers import determine_category
 import logging
@@ -434,57 +434,67 @@ def rename_file(request, file_id):
 
 @login_required
 def view_profile(request):
-    form = ChangePassWordForm()
-    form1 = ChangeUsernameForm()
-    form2 = ChangeEmailForm()
-    return render(request, PROFILE_VIEW_TEMPLATE, {'action': 'Change Password', 'form': form, 'action1': 'Change Username', 'form1': form1, 'action2': 'Change Email', 'form2': form2})
+    return render(request, PROFILE_VIEW_TEMPLATE)
 
 # DONE
 
 
 @login_required
 def change_password(request):
-    user = User.objects.get(pk=request.user.id)
     if request.method == "POST":
-        form = ChangePassWordForm(request.POST)
+        form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
-            if user.check_password(form['old_password'].value()) and form['new_password'].value() == form['confirm_new_password'].value():
-                user.set_password(form['new_password'].value())
-                user.save()
-    return redirect('view-profile')
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(
+                request, 'Your password was successfully updated!')
+            return redirect('change-password')
+        else:
+            messages.error(request, 'Please correct the errors below')
+    else:
+        form = form = PasswordChangeForm(request.user)
+    return render(request, FORM_TEMPLATE, {'action': 'Change Password', 'form': form})
 # DONE
 
 
 @login_required
 def change_username(request):
-    user = User.objects.get(pk=request.user.id)
+    user = request.user
     if request.method == "POST":
         form = ChangeUsernameForm(request.POST)
         if form.is_valid():
-            if User.objects.exclude(pk=user.id).filter(username=user).exists():
-                print('exists')
+            if User.objects.exclude(pk=user.id).filter(username=form.cleaned_data['new_username']).exists():
+                messages.warning(request, 'Username already exists!')
             else:
-                if user.check_password(form['password'].value()):
-                    print('here')
-                    user.username = form['new_username'].value()
+                if user.check_password(form.cleaned_data['password']):
+                    user.username = form.cleaned_data['new_username']
                     user.save()
+                    messages.success(request, 'Success!')
+                else:
+                    messages.warning(request, 'Password is incorrect!')
+    else:
+        form = ChangeUsernameForm()
 
-    return redirect('view-profile')
+    return render(request, FORM_TEMPLATE, {'action': 'Change Username', 'form': form})
 # DONE
 
 
-@login_required
+@ login_required
 def change_email(request):
-    user = User.objects.get(pk=request.user.id)
+    user = request.user
     if request.method == "POST":
         form = ChangeEmailForm(request.POST)
         if form.is_valid():
-            if User.objects.exclude(pk=user.id).filter(email=user.email).exists():
-                print('exists')
+            if User.objects.exclude(pk=user.id).filter(email=form.cleaned_data['new_email']).exists():
+                messages.warning(request, 'Email already exists!')
             else:
-                if user.check_password(form['password'].value()):
-                    print('here')
-                    user.email = form['new_email'].value()
+                if user.check_password(form.cleaned_data['password']):
+                    user.email = form.cleaned_data['new_email']
                     user.save()
+                    messages.success(request, 'Success!')
+                else:
+                    messages.warning(request, 'Password is incorrect!')
+    else:
+        form = ChangeEmailForm()
 
-    return redirect('view-profile')
+    return render(request, FORM_TEMPLATE, {'action': 'Change Email', 'form': form})
