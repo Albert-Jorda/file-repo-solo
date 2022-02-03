@@ -4,7 +4,7 @@
 
 <h1>{{ current.name }}</h1>
 <!-- by category -->
-{% if files %}
+{% if current %}
 <label for="categories">Category: </label>
 <select name="categories" id="categories">
     <option value="all" data-url="{% url 'view-folder' current.id  %}?category=">all</option>

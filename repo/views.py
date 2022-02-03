@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from repo.forms import *
 from repo.models import Folder, File, HeirData, User
-from repo.helpers import determine_category
+from repo.helpers import determine_category, CATEGORIES
 import logging
 
 # Logger
@@ -232,7 +232,6 @@ def view_folder(request, folder_id):
             files = File.objects.filter(folder=folder, name__icontains=search).order_by(
                 'name' if sequence == 'increasing' else '-name')
 
-    categories = File.objects.values_list('category', flat=True)
     filesList = File.objects.filter(folder=folder)
 
     return render(request, FOLDER_VIEW_TEMPLATE, {
@@ -242,7 +241,7 @@ def view_folder(request, folder_id):
         "children": children,
         "files": files,
         "upload_form": form,
-        "categories": categories,
+        "categories": CATEGORIES,
         "order_by": ['name', 'category', 'uploaded_at'],
         "sequences": ['increasing', 'decreasing'],
         "filesList": filesList,
