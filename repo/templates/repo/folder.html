@@ -93,8 +93,8 @@
         {% endfor %}
 
         {% for file in files %}
-        <tr data-url="{% url 'view-file' file.id %}" class="file">
-            <td> {{ file.name }} </td>
+        <tr>
+            <td data-url="{% url 'view-file' file.id %}" class="file_open"> {{ file.name }} </td>
             <td> {{ file.category }} </td>
             <td> {{ file.uploaded_at }} </td>
             <td>
