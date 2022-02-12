@@ -1,7 +1,63 @@
 {% extends "repo/layout.html" %}
 {% block content %}      
 {% load crispy_forms_tags %}
+{% load static %}
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    
+    <link rel="stylesheet" href="{% static 'repo/style_index.css'%}">
 
-<h1>Index</h1>
+</head>
+<body>
+    
 
+<h1 class="title">FiRE</h1>
+<div id="text" >
+    Storage that is capable of becoming the objective repository
+    of vast accumulation of files and data, which it can then
+    preserve in time and transmit to following generation.
+</div>
+<div class="text-box">
+    <a href="" class="btn btn-white btn-animate btnsmall">Get Started</a>
+</div>
+
+<div class="movingicons">
+    <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_jm6azggy.json" class="main-img" background="transparent" speed="1"  loop autoplay></lottie-player>
+    <lottie-player src="https://assets6.lottiefiles.com/packages/lf20_id0xnhpp.json" class="cloud-img" background="transparent" speed="1" loop autoplay></lottie-player>
+    <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_rtqkz5gs.json" class="folder-img" background="transparent"  speed="1"  loop  autoplay></lottie-player>
+    <lottie-player src="https://assets8.lottiefiles.com/packages/lf20_ezvzqsls.json" class="files-img" background="transparent"  speed="1" loop  autoplay></lottie-player>
+    <a href="#features"><lottie-player src="https://assets7.lottiefiles.com/packages/lf20_1e46stq1.json" class="arrow-img" background="transparent" speed="1"  loop autoplay></lottie-player></a>
+</div>
+<div class="features" id="features"> 
+    <div class="features-1">
+        <div>
+            <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_scieofxz.json" class="feature-img-1" background="transparent" speed="1"  style="width: 160px; margin-bottom: 10px;" loop autoplay></lottie-player>
+            <h1 class="titlepic1">FiRE</h1>
+            <p class="view-on-large picdesc1">FiRE stands for File Repository, the place where you can upload your files and gain access anytime from your account.</p>
+        </div>
+        <div>
+            <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_adngrvag.json" class="feature-img-1" background="transparent" speed="1"  style="width: 220px; margin-bottom: -30px;" loop autoplay></lottie-player>
+            <h1 class="titlepic1">ORGANIZED REPOSITORY</h1>
+            <p class="picdesc1">You can upload files to any specific or personal folder here at FiRE. Easily organize and navigate your files through different categories for your convenience.</p>
+        </div>
+    </div>
+    <div class="features-2">
+        <div class="retrieval-div">
+            <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_hgsekn4v.json" class="feature-img-2" background="transparent" speed="1" style="margin-bottom: 0px;" loop autoplay></lottie-player>
+            <h1 class="titlepic2">EASY RETRIEVAL</h1>
+            <p class="view-on-large easy-retrieval picdesc2">You can always download and save your files from your repository without any delay. Get multiple copies and update it anytime you want.</p>
+        </div>
+        <div>
+            <lottie-player src="https://assets5.lottiefiles.com/packages/lf20_mnsjwnls.json" class="feature-img-2" background="transparent" speed="1"  loop autoplay></lottie-player>
+            <h1 class="titlepic2">VIEW AND REVIEW</h1>
+            <p class="picdesc2">In a single click, you can view your images and review your documents before retrieving, updating, or deleting them.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 {% endblock %}
