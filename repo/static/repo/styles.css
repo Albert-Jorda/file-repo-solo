@@ -147,3 +147,84 @@ box-shadow: none;
 box-shadow: none !important;
 border: 2px solid #f2aa4cff ;
 }
+
+#hr hr{
+    height: 2px;
+	margin: 4px;
+    margin-bottom: 10px;
+	background-color: #101820FF;
+}
+
+#profile_box{
+    font-family: 'Rubik', sans-serif;
+    position: fixed;
+    overflow: hidden;
+    text-align: center;
+    margin-top: 50px;
+    padding: 30px;
+	width: 600px;
+    top: auto !important;
+    left: auto !important;
+    border-radius: 15px;
+	border: 2px solid rgb(16, 24, 32);
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+	background-color: rgba(255,255,255,0.5);
+    backdrop-filter: blur(5px);
+}
+
+#profile_pic{
+	display: block;
+    width: 230px;
+	margin: 10px auto;
+    border-radius: 50%;
+	border: 2px solid rgb(16, 24, 32);
+}
+
+#profile_pic:hover{
+    transform: scale(1.1);
+    transition-duration: 0.5s;
+}
+
+#profile_btn{
+    font-weight: bold;
+    border-radius: 15px;
+    width: 210px;
+    margin: 7px;
+    color: #101820FF;
+    background-color: #F2AA4CFF;
+    border: 1px solid rgb(16, 24, 32);
+    box-shadow: 0 5px 10px rgb(0 0 0 / 0.2);
+}
+
+#profile_btn:hover{
+    color: #F2AA4CFF;
+    background-color: #101820FF;
+    border-color: #101820FF;
+    transition-duration: 0.5s;
+}
+
+.py-5 label[for=id_image]{
+    display:none;
+    text-align: center;
+    width:100%;
+}
+
+.py-5 .clearablefileinput{
+    color: #101820FF;
+    background-color: #F2AA4CFF;
+    border: 1px solid rgb(16, 24, 32);
+    outline: none;
+    border-radius: 50px;
+    width: 270px;
+    margin: auto;
+}
+
+.py-5 ::-webkit-file-upload-button{
+    color: #F2AA4CFF ;
+    border: 1px solid rgb(242, 170, 76);
+    background-color: #101820FF;
+    border-radius: 50px;
+    height: 35px;
+    width: 120px;
+    font-weight: bold;
+}
