@@ -5,7 +5,7 @@
 
 <div class="container py-5">
   <h1><img id="startpic" src="{% static 'repo/images/start.png' %}" alt="">{{action}}</h1>
-  <form method="POST" {% if action == "Upload File" or action == "Change Profile Picture" %} enctype=multipart/form-data {% endif %}>
+  <form autocomplete="off"method="POST" {% if action == "Upload File" or action == "Change Profile Picture" %} enctype=multipart/form-data {% endif %}>
     {% csrf_token %}
     {{ form|crispy }}
     <button class="btn btn-primary" type="submit">Submit</button>
