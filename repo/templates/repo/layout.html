@@ -48,7 +48,7 @@
           <a class="nav-link" href="{% url 'upload-file' %}">Upload File</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          <a class="nav-link" href="{% url 'logout' %}?prev_url={{url_name}}">Logout</a>
         </li>
         {% else %}
         <li class="nav-item">
