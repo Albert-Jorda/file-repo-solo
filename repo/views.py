@@ -187,7 +187,7 @@ def view_repo(request):
         "children": [folder],
         "files": None,
         "upload_form": None,
-        "url_name": 'upload-file'
+        "url_name": 'view-repo'
     })
 
 # DONE
