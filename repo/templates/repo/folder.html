@@ -2,11 +2,11 @@
 {% block content %}
 {% load crispy_forms_tags %}
 
-<h1 id="current-name">{{ current.name }}</h1>
+<h1>{{ current.name }}</h1>
 <!-- by category -->
 {% if files %}
-<label for="categories" class="lbl-filters">Category: </label>
-<select name="categories" id="categories" class="filters">
+<label for="categories">Category: </label>
+<select name="categories" id="categories">
     <option value="all" data-url="{% url 'view-folder' current.id  %}?category=">all</option>
     {% for category in categories %}
     {% if request.GET.category == category %}
@@ -15,41 +15,41 @@
     <option value="{{ category }}" data-url="{% url 'view-folder' current.id  %}?category={{category}}">{{ category }}</option>
     {% endif %}
     {% endfor %}
-</select>&nbsp;
+</select>
 
 <!-- end by category -->
 
 <!-- sorting -->
 <label for="order_by">Order By: </label>
-<select name="order_by" id="order_by" class="filters">
+<select name="order_by" id="order_by">
     {% for order in order_by%}
     {% if request.GET.order_by == order %}
-    <option value="{{ order }}" data-url="{% url 'view-folder' current.id  %}?order_by={{order}}&sequence=increasing" selected>{{ order }} &nbsp;&nbsp;</option>
+    <option value="{{ order }}" data-url="{% url 'view-folder' current.id  %}?order_by={{order}}&sequence=increasing" selected>{{ order }}</option>
     {% else %}
-    <option value="{{ order }}" data-url="{% url 'view-folder' current.id  %}?order_by={{order}}&sequence=increasing">{{ order }} &nbsp;&nbsp;</option>
+    <option value="{{ order }}" data-url="{% url 'view-folder' current.id  %}?order_by={{order}}&sequence=increasing">{{ order }}</option>
     {% endif %}
     {% endfor %}
-</select>&nbsp;
+</select>
 <!-- end sorting -->
 
 <!-- sequence -->
 <label for="sequence">Sequence: </label>
-<select name="sequence" id="sequence" class="filters">
+<select name="sequence" id="sequence">
     {% for sequence in sequences %}
     {% if request.GET.sequence == sequence%}
-    <option value="{{sequence}}" data-url="{% url 'view-folder' current.id  %}?order_by={{request.GET.order_by}}&category={{request.GET.category}}&search={{request.GET.search}}&sequence={{sequence}}" selected>{{sequence}} &nbsp;&nbsp;</option>
+    <option value="{{sequence}}" data-url="{% url 'view-folder' current.id  %}?order_by={{request.GET.order_by}}&category={{request.GET.category}}&search={{request.GET.search}}&sequence={{sequence}}" selected>{{sequence}}</option>
     {% else %}
-    <option value="{{sequence}}" data-url="{% url 'view-folder' current.id  %}?order_by={{request.GET.order_by}}&category={{request.GET.category}}&search={{request.GET.search}}&sequence={{sequence}}">{{sequence}} &nbsp;&nbsp;</option>
+    <option value="{{sequence}}" data-url="{% url 'view-folder' current.id  %}?order_by={{request.GET.order_by}}&category={{request.GET.category}}&search={{request.GET.search}}&sequence={{sequence}}">{{sequence}}</option>
     {% endif %}
     {% endfor %}
-</select><br><br>
+</select>
 <!-- end sequence -->
 
 <!-- search -->
 <form class="form-inline my-2 my-lg-0" action="{% url 'view-folder' current.id  %}">
     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search" list="search_list" name="search" value={{request.GET.search}}>
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-</form><br>
+</form>
 
 <datalist id="search_list">
     {% for file in filesList %}
@@ -109,18 +109,18 @@
 
 {% if current %}
 <br />
-<form method="POST" action="{% url 'create-folder' current.id %}" class="form-inline my-2 my-lg-0">
+<form method="POST" action="{% url 'create-folder' current.id %}">
     {% csrf_token %}
-    <input type="text" placeholder="Folder Name" name="folder-name" class="form-control mr-sm-2">
-    <input type="submit" value="Create Folder" class="btn btn-outline-success my-2 my-sm-0">
+    <input type="text" placeholder="Folder Name" name="folder-name">
+    <input type="submit" value="Create Folder">
 </form>
 
 <br />
 <form method="POST" enctype=multipart/form-data action="{% url 'upload-file-to-folder' current.id %}">
     {% csrf_token %}
     {{ upload_form|crispy }}
-    <button class="btn btn-upload" type="submit">Submit</button>
-</form><br><br>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
 {% endif %}
 
 {% endblock %}

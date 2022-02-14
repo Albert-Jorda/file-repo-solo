@@ -3,36 +3,23 @@ Add the file extensions and their corresponding categories here
 '''
 CATEGORIES_MAP = {
     "video": [
-        "mp4", "mkv", "webm", "mov", "mpeg4",
-        "MP4", "MKV", "WEBM", "MOV", "MPEG4",
+        "mp4", "mkv", "webm", "mov"
     ],
 
     "text": [
-        "txt", "py", "js", 'html', 'htm',
-        "TXT", "PY", "JS", 'HTML', 'htm'
+        "txt", "py", "js"
     ],
 
     "image": [
-        "jpg", "jpeg", "png", "gif",
-        "JPG", "JPEG", "PNG", "GIF",
+        "jpg", "jpeg", "png"
     ],
 
     "executable": [
-        "exe",
-        "EXE",
+        "exe"
     ],
 
     "document": [
-        "pdf", "docx", "pptx", "ppt", "doc", "xls", "xlsx",
-        "PDF", "DOCX", "PPTX", "PPT", "DOC", "XLS", "XLSX",
-    ],
-    "audio": [
-        "mp3", "wav", "avi", "m4a", 'wma',
-        "MP3", "WAV", "AVI", "M4A", 'WMA',
-    ],
-    "compressed": [
-        "zip", "rar",
-        "ZIP", "RAR",
+        "pdf", "docx", "pptx"
     ],
 }
 

@@ -1,15 +1,13 @@
 {% extends "repo/layout.html" %}
-{% block content %}
+{% block content %}      
 {% load crispy_forms_tags %}
 
 <div class="container py-5">
   <h1>{{action}}</h1>
   <form method="POST">
     {% csrf_token %}
-    <div class="wrapper">
-      <input type="submit" value="confirm" name="confirmation" class="btn-confirm">
-      <input type="submit" value="deny" name="confirmation" class="btn-secondary" onclick="windows.location.href = '{{request.META.HTTP_REFERER}}'">
-    </div>
+    <input type="submit" value="confirm" name="confirmation">
+    <input type="submit" value="deny" name="confirmation">
   </form>
 </div>
 
