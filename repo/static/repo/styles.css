@@ -269,7 +269,7 @@ select:focus {
   width: 100%;
 }
 
-.py-5 .clearablefileinput {
+.clearablefileinput {
   color: #101820ff;
   background-color: #f2aa4cff;
   border: 1px solid rgb(16, 24, 32);
@@ -279,7 +279,7 @@ select:focus {
   margin: auto;
 }
 
-.py-5 ::-webkit-file-upload-button {
+::-webkit-file-upload-button {
   color: #f2aa4cff;
   border: 1px solid rgb(242, 170, 76);
   background-color: #101820ff;
