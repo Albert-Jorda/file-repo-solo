@@ -1,47 +1,35 @@
 {% extends "repo/layout.html" %}
 {% block content %}
 {% load crispy_forms_tags %}
-{% load static %}
 
 <div class="profile-container">
     <div id="profile_box">
-        <h1>Profile Settings</h1>
-        <div class="container">
-            <div class="left">
-                <img id="profile_pic" src="{{ request.user.image.url }}" />
-                {% if user.is_authenticated %}
-                    <h2>{{ user.username }}</h2>
-                {% else %}
-                    <h1>Profile</h1>
-                {% endif %}
-                <a href="{% url 'change-profile-picture' %}">
-                    <button type="button" id="profile_btn" class="btn btn-primary">Change Profile Picture</button>
+        <div class="left">
+            <img id="profile_pic" src="{{ request.user.image.url }}" />
+            {% if user.is_authenticated %}
+                <h1>{{ user.username }}</h1>
+            {% else %}
+                <h1>Profile</h1>
+            {% endif %}
+            <a href="{% url 'change-profile-picture' %}">
+                <button type="button" id="profile_btn" class="btn btn-primary">Change Profile Picture</button>
+            </a>
+        </div>
+        <div class="right">
+            <div class="wrapper">
+                <a href="{% url 'change-username' %}">
+                    <button type="button" id="profile_btn" class="btn btn-primary">Change Username</button>
                 </a>
-            </div>
-            <div class="right">
-                <div class="wrapper">
-                    <div class="content">
-                        <img class="icon" src="{% static 'repo/images/name.png' %}" alt="">
-                        <a href="{% url 'change-username' %}">
-                            <button type="button" id="profile_btn" class="btn btn-primary">Change Username</button>
-                        </a>
-                    </div>
-                    <div class="content">
-                        <img class="icon" src="{% static 'repo/images/lock.png' %}" alt="">
-                        <a href="{% url 'change-password' %}">
-                            <button type="button" id="profile_btn" class="btn btn-primary">Change Password</button>
-                        </a>
-                    </div>
-                    <div class="content">
-                        <img class="icon" src="{% static 'repo/images/mail.png' %}" alt="">
-                        <a href="{% url 'change-email' %}">
-                            <button type="button" id="profile_btn" class="btn btn-primary">Change Email</button>
-                        </a>
-                    </div>
-                    
-                </div>
+                <a href="{% url 'change-password' %}">
+                    <i class="fa-solid fa-key"></i>
+                    <button type="button" id="profile_btn" class="btn btn-primary">Change Password</button>
+                </a>
+                <a href="{% url 'change-email' %}">
+                    <button type="button" id="profile_btn" class="btn btn-primary">Change Email</button>
+                </a>
             </div>
         </div>
     </div>   
     </div> 
+
 {% endblock %}

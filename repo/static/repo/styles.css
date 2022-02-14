@@ -109,7 +109,7 @@ position: fixed;
 width: 100%;
 z-index: 1000;
 opacity: 0;
-animation: zoomInDown 3s;
+animation: zoomInDown 5s;
 pointer-events: none;
 }
 .message-container {
@@ -296,6 +296,23 @@ margin-bottom: 10px;
 background-color: #101820ff;
 }
 
+#profile_box {
+font-family: "Rubik", sans-serif;
+position: fixed;
+overflow: hidden;
+text-align: center;
+margin-top: 50px;
+padding: 30px;
+width: 600px;
+top: auto !important;
+left: auto !important;
+border-radius: 15px;
+border: 2px solid rgb(16, 24, 32);
+box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+background-color: rgba(255, 255, 255, 0.5);
+backdrop-filter: blur(5px);
+}
+
 #profile_pic {
 display: block;
 width: 230px;
@@ -331,6 +348,16 @@ transition-duration: 0.5s;
 display: none;
 text-align: center;
 width: 100%;
+}
+
+.py-5 .clearablefileinput {
+color: #101820ff;
+background-color: #f2aa4cff;
+border: 1px solid rgb(16, 24, 32);
+outline: none;
+border-radius: 50px;
+width: 270px;
+margin: auto;
 }
 
 .py-5 ::-webkit-file-upload-button {
@@ -381,33 +408,32 @@ border: 2px solid #f2aa4cff ;
 }
 
 /*Profile*/
+
 .profile-container{
 width: 100vw;
+height: 100vh;
 }
 .profile-container .left{
-padding: 1rem 5rem;
+padding: 1rem;
 width: fit-content;
 border-right:1px solid rgba(0,0,0,0.2);
 }
 .profile-container .right{
-padding: 1rem 4rem;
+padding: 1rem;
 width: fit-content;
 margin-top: 4%;
 }
-img.icon{
-width: 25px;
-height: 25px;
-}
+
 #profile_box{
-  display:flex;
-  flex-direction: column;
 position: relative !important;
+display: flex;
+flex-direction:row;
 margin: auto !important;
 margin-top: 5% !important;
 font-family: 'Rubik', sans-serif;
 overflow: hidden;
 text-align: center;
-padding: 1rem;
+padding: 3rem;
 width: fit-content;
 border-radius: 15px;
 box-shadow: 0 0 30px rgba(0,0,0,0.5);
@@ -418,45 +444,31 @@ border: none;
 border-top: 1px solid rgba(255,255,255, 0.5) !important;
 border-left: 1px solid rgba(255,255,255, 0.5) !important;
 }
-#profile_box h1{
-text-transform: uppercase;
-font-weight: 700;
-font-size: 3rem;
-text-align: center;
-align-items: center;
-margin-bottom:2rem;
-}
-#profile_box .container{
-  display:flex;
-  flex-direction: row;
-}
+
 #profile_pic{
 display: block;
 width: 230px;
 margin: 10px auto;
-border-radius: 50%;
-box-shadow: 0 0 30px rgba(0,0,0,0.5);
+border-radius: 10px;
+border: 0.4rem solid rgb(16, 24, 32);
 }
+
 #profile_pic:hover{
 transform: scale(1.1);
 transition-duration: 0.5s;
 }
+
 #profile_box .wrapper{
 display:flex;
 flex-direction:column;
 }
+
 .profile-container a{
 text-decoration: none;
 }
-.wrapper .content{
-display:flex;
-flex-direction: row;
-justify-content:center;
-align-items: center;
-margin-left: 20%;
-}
 #profile_btn{background-image: linear-gradient(to right, #F09819 0%, #ffcf13  51%, #F09819  100%)}
 #profile_btn{
+width:fit-content;
 margin: 2rem;
 padding: 5px 25px;
 text-align: center;
@@ -487,19 +499,13 @@ width:100%;
 }
 
 .py-5 .clearablefileinput{
-  display: block;
-  width: 100%;
-  height: calc(1.5em + .75rem + 2px);
-  padding: .375rem .75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #495057;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ced4da;
-  border-radius: .25rem;
-  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+color: #101820FF;
+background-color: #F2AA4CFF;
+border: 1px solid rgb(16, 24, 32);
+outline: none;
+border-radius: 50px;
+width: 270px;
+margin: auto;
 }
 
 .py-5 ::-webkit-file-upload-button{
@@ -510,7 +516,6 @@ border-radius: 50px;
 height: 35px;
 width: 120px;
 font-weight: bold;
-cursor: pointer;
 }
 .form-control:focus{
 box-shadow: none !important;
