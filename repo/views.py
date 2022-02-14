@@ -1,4 +1,4 @@
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -25,7 +25,7 @@ PROFILE_VIEW_TEMPLATE = "repo/profile.html"
 
 
 def index(request):
-    return render(request, "repo/index.html", {})
+    return render(request, "repo/index.html", {"url_name": 'index'})
 
 # DONE
 
@@ -65,7 +65,8 @@ def login_request(request):
 
     return render(request, FORM_TEMPLATE, {
         "action": "Login",
-        "form": form
+        "form": form,
+        "url_name": 'login'
     })
 
 # DONE
@@ -98,7 +99,8 @@ def register_request(request):
 
     return render(request, FORM_TEMPLATE, {
         "action": "Register",
-        "form": form
+        "form": form,
+        "url_name": 'register'
     })
 
 # DONE
@@ -106,9 +108,18 @@ def register_request(request):
 
 @login_required
 def logout_request(request):
-    logger.info(f'User "{ request.user.username }" logged out.')
-    logout(request)
-    return redirect('index')
+    if request.method == "POST":
+        if request.POST.get("confirmation") == "confirm":
+            logger.info(f'User "{ request.user.username }" logged out.')
+            logout(request)
+
+        return redirect(request.GET.get("prev_url", ''))
+    else:
+        return render(request, CONFIRMATION_TEMPLATE, {
+            "action": "Confirm Logout",
+            "url_name": 'logout'
+        })
+
 
 # DONE
 
@@ -137,7 +148,8 @@ def upload_file(request):
 
     return render(request, FORM_TEMPLATE, {
         "form": form,
-        "action": "Upload File"
+        "action": "Upload File",
+        "url_name": 'upload-file'
     })
 
 # DONE
@@ -175,7 +187,8 @@ def view_repo(request):
         "parent": None,
         "children": [folder],
         "files": None,
-        "upload_form": None
+        "upload_form": None,
+        "url_name": 'upload-file'
     })
 
 # DONE
@@ -232,7 +245,8 @@ def view_folder(request, folder_id):
             files = File.objects.filter(folder=folder, name__icontains=search).order_by(
                 'name' if sequence == 'increasing' else '-name')
 
-    categories = sorted(list(set(File.objects.values_list('category', flat=True))))
+    categories = sorted(
+        list(set(File.objects.values_list('category', flat=True))))
     filesList = File.objects.filter(folder=folder)
 
     return render(request, FOLDER_VIEW_TEMPLATE, {
@@ -246,6 +260,7 @@ def view_folder(request, folder_id):
         "order_by": ['name', 'category', 'uploaded_at'],
         "sequences": ['increasing', 'decreasing'],
         "filesList": filesList,
+        "url_name": 'view-folder'
     })
 
 # DONE
@@ -320,7 +335,8 @@ def delete_folder(request, folder_id):
         return redirect('view-folder', parent.id)
     else:
         return render(request, CONFIRMATION_TEMPLATE, {
-            "action": "Confirm Folder Delete"
+            "action": "Confirm Folder Delete",
+            "url_name": 'delete-folder'
         })
 
 # DONE
@@ -349,7 +365,8 @@ def delete_file(request, file_id):
         return redirect('view-folder', folder.id)
     else:
         return render(request, CONFIRMATION_TEMPLATE, {
-            "action": "Confirm File Delete"
+            "action": "Confirm File Delete",
+            "url_name": 'delete-file'
         })
 
 # DONE
@@ -391,7 +408,8 @@ def rename_folder(request, folder_id):
         form = FolderRenameForm(instance=folder)
         return render(request, FORM_TEMPLATE, {
             "action": "Rename Folder",
-            "form": form
+            "form": form,
+            "url_name": 'rename-folder'
         })
 
 # DONE
@@ -427,7 +445,8 @@ def rename_file(request, file_id):
         form = FileRenameForm(instance=file)
         return render(request, FORM_TEMPLATE, {
             "action": "Rename File",
-            "form": form
+            "form": form,
+            "url_name": 'rename-file'
         })
 
 # DONE
@@ -435,7 +454,7 @@ def rename_file(request, file_id):
 
 @login_required
 def view_profile(request):
-    return render(request, PROFILE_VIEW_TEMPLATE)
+    return render(request, PROFILE_VIEW_TEMPLATE, {"url_name": 'view-profile'})
 
 # DONE
 
@@ -454,7 +473,7 @@ def change_password(request):
             messages.error(request, 'Please correct the errors below')
     else:
         form = form = PasswordChangeForm(request.user)
-    return render(request, FORM_TEMPLATE, {'action': 'Change Password', 'form': form})
+    return render(request, FORM_TEMPLATE, {'action': 'Change Password', 'form': form, "url_name": 'change-password'})
 # DONE
 
 
@@ -476,7 +495,7 @@ def change_username(request):
     else:
         form = ChangeUsernameForm()
 
-    return render(request, FORM_TEMPLATE, {'action': 'Change Username', 'form': form})
+    return render(request, FORM_TEMPLATE, {'action': 'Change Username', 'form': form, "url_name": 'change-username'})
 # DONE
 
 
@@ -498,7 +517,7 @@ def change_email(request):
     else:
         form = ChangeEmailForm()
 
-    return render(request, FORM_TEMPLATE, {'action': 'Change Email', 'form': form})
+    return render(request, FORM_TEMPLATE, {'action': 'Change Email', 'form': form, "url_name": 'change-email'})
 
 
 @login_required
@@ -514,4 +533,4 @@ def change_profile_picture(request):
     else:
         form = ChangeImageForm()
 
-    return render(request, FORM_TEMPLATE, {'action': 'Change Profile Picture', 'form': form})
+    return render(request, FORM_TEMPLATE, {'action': 'Change Profile Picture', 'form': form, "url_name": 'change-profile-picture'})
