@@ -259,7 +259,7 @@ def view_folder(request, folder_id):
         "order_by": ['name', 'category', 'uploaded_at'],
         "sequences": ['increasing', 'decreasing'],
         "filesList": filesList,
-        "url_name": 'view-folder'
+        "url_name": 'repo/view/folder/' + str(folder_id)
     })
 
 # DONE
