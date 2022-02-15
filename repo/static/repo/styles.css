@@ -109,27 +109,8 @@ a .nav-link:hover {
   width: 100%;
   z-index: 1000;
   opacity: 0;
-  animation: zoomInDown 3s;
   pointer-events: none;
-}
-.message-container {
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  margin: auto;
-  width: fit-content;
-  border-radius: 12px;
-  background: linear-gradient(to right, #000000 0%, #414141 140%);
-  backdrop-filter: blur(5px);
-  color: #f2ab4f;
-  font-size: 3rem;
-top: 30%;
-position: fixed;
-width: 100%;
-z-index: 1000;
-opacity: 0;
-animation: zoomInDown 2s;
-pointer-events: none;
+  animation: zoomInDown 3s;
 }
 .message-container {
 align-items: center;
@@ -171,7 +152,6 @@ font-size: 3rem;
   animation: transitionContent 1.5s;
 }
 .py-5 h1 {
-  margin-left: -5%;
   text-transform: uppercase;
   font-weight: 700;
   font-size: 3rem;
@@ -185,14 +165,7 @@ font-size: 3rem;
 .asteriskField {
   display: none;
 }
-.py-5 .btn {
-  background-image: linear-gradient(
-    to right,
-    #f09819 0%,
-    #ffcf13 51%,
-    #f09819 100%
-  );
-}
+.py-5 .btn {background-image: linear-gradient(to right,#f09819 0%,#ffcf13 51%,#f09819 100%);}
 .py-5 .btn {
   margin: auto;
   padding: 5px 25px;
@@ -207,27 +180,6 @@ font-size: 3rem;
   border-radius: 10px;
   display: block;
   text-decoration: none;
-}
-#messages {
-  top: 30%;
-  position: fixed;
-  width: 100%;
-  z-index: 1000;
-  opacity: 0;
-  animation: zoomInDown 4s;
-  pointer-events: none;
-}
-.message-container {
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  margin: auto;
-  width: fit-content;
-  border-radius: 12px;
-  background: linear-gradient(to right, #000000 0%, #414141 140%);
-  backdrop-filter: blur(5px);
-  color: #f2ab4f;
-  font-size: 3rem;
 }
 
 /*Forms*/
@@ -257,14 +209,6 @@ font-size: 3rem;
   border-top: 1px solid rgba(255, 255, 255, 0.5);
   border-left: 1px solid rgba(255, 255, 255, 0.5);
   animation: transitionContent 1.5s;
-}
-.py-5 h1 {
-  margin-left: -5%;
-  text-transform: uppercase;
-  font-weight: 700;
-  font-size: 3rem;
-  text-align: center;
-  align-items: center;
 }
 .requiredField {
   font-size: 1.1rem;
@@ -354,61 +298,77 @@ select:focus {
   transition-duration: 0.5s;
 }
 
-.py-5 label[for="id_image"] {
-  display: none;
-  text-align: center;
-  width: 100%;
-}
-
-/* .py-5 ::-webkit-file-upload-button {
-  color: #f2aa4cff;
-  border: 1px solid rgb(242, 170, 76);
-  background-color: #101820ff;
-  border-radius: 50px;
-  height: 35px;
-  width: 120px;
-  font-weight: bold;
-  display: none;
-  text-align: center;
-  width: 100%;
-} */
+/*FolderREPOSITORY*/
 #folder-file-upload .clearablefileinput {
-  color: #101820ff;
-  background-color: #f2aa4cff;
-  border: 1px solid rgb(16, 24, 32);
-  outline: none;
-  border-radius: 50px;
-  width: 270px;
-  margin-left: 15px;
+  width: 100%;
+  height: fit-content;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-#folder-file-upload ::-webkit-file-upload-button {
-  color: #f2aa4cff;
-  border: 1px solid rgb(242, 170, 76);
-  background-color: #101820ff;
-  border-radius: 50px;
-  height: 35px;
-  width: 120px;
-  font-weight: bold;
-}
 #upload-file .clearablefileinput {
-  color: #101820ff;
-  background-color: #f2aa4cff;
-  border: 1px solid rgb(16, 24, 32);
-  outline: none;
-  border-radius: 50px;
-  width: 270px;
-  margin: auto;
+  width: 100%;
+  height: fit-content;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+#folder-file-upload ::-webkit-file-upload-button {background-image:  linear-gradient(to right,#000 0%,#414345 51%,#000 100%);}
+#folder-file-upload ::-webkit-file-upload-button {
+  padding: 5px 25px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #f2aa4cff;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 30%);
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+#folder-file-upload ::-webkit-file-upload-button:hover{
+  background-position: right center; /* change the direction of the change here */
+  text-decoration: none;
+}
+.py-5 ::-webkit-file-upload-button {background-image:  linear-gradient(to right,#000 0%,#414345 51%,#000 100%);}
+.py-5 ::-webkit-file-upload-button {
+  padding: 5px 25px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #f2aa4cff;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 30%);
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+.py-5 ::-webkit-file-upload-button:hover{
+  background-position: right center; /* change the direction of the change here */
+  text-decoration: none;
 }
 
-#upload-file ::-webkit-file-upload-button {
-  color: #f2aa4cff;
-  border: 1px solid rgb(242, 170, 76);
-  background-color: #101820ff;
-  border-radius: 50px;
-  width: 120px;
-  font-weight: bold;
-}
 .form-control:focus {
   box-shadow: none !important;
   border: 3px solid #f09819;
@@ -443,6 +403,7 @@ select:focus {
 img.icon {
   width: 25px;
   height: 25px;
+  filter: drop-shadow(3px 4px 4px rgba(0, 0, 0, 0.5));
 }
 #profile_box {
   display: flex;
@@ -534,37 +495,11 @@ img.icon {
 }
 
 .py-5 label[for="id_image"] {
-  display: none;
-  text-align: center;
+  padding-left:1.5%;
+  font-weight: 500;
   width: 100%;
 }
 
-.py-5 .clearablefileinput {
-  display: block;
-  width: 100%;
-  height: calc(1.5em + 0.75rem + 2px);
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #495057;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.py-5 ::-webkit-file-upload-button {
-  color: #f2aa4cff;
-  border: 1px solid rgb(242, 170, 76);
-  background-color: #101820ff;
-  border-radius: 50px;
-  height: 35px;
-  width: 120px;
-  font-weight: bold;
-  cursor: pointer;
-}
 .form-control:focus {
   box-shadow: none !important;
   border: 3px solid #f09819;
@@ -575,6 +510,7 @@ img.icon {
 .textinput:focus ~ .text-muted {
   display: block;
 }
+
 /*ANIMATIONS*/
 @keyframes transitionContent {
   from {
@@ -603,8 +539,8 @@ img.icon {
   }
 
   50% {
-    -webkit-transform: scale3d(1.05, 1.05, 1.05);
-    transform: scale3d(1.05, 1.05, 1.05);
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
   }
 
   to {
@@ -619,8 +555,8 @@ img.icon {
   }
 
   50% {
-    -webkit-transform: scale3d(1.05, 1.05, 1.05);
-    transform: scale3d(1.05, 1.05, 1.05);
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
   }
 
   to {
@@ -705,6 +641,91 @@ img.icon {
   animation-name: zoomInDown;
 }
 
+/*REPOSITORY MAIN DESIGN*/
+.folder-container{
+margin-top:2% !important;
+}
+.folder-container .ftitle{
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 3rem;
+  text-align: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.dropdown-wrapper{
+width: 100%;
+justify-content:center;
+margin-bottom: 1%;
+}
+.dropdown-wrap{
+margin: auto;
+align-items: center;
+justify-content: center;
+text-align: center;
+}
+.dropdown-wrap label{
+  font-weight: 600;
+}
+.head-wrapper{
+display:flex;
+flex-direction: row;
+justify-content: space-between;
+}
+.inwrap{
+  display:flex;
+flex-direction: row;
+}
+.folderupload{
+display:flex;
+height:fit-content;
+flex-direction: row;
+align-items: center;
+padding-left: 15px;
+}
+.folderupload p{
+font-weight:500;
+padding-top:5px;
+}
+.folderupload form{
+display:flex;
+flex-direction: row;
+align-items: center;
+}
+.folderupload form #folder-file-upload{
+height:fit-content;
+align-items: center;
+padding-top:5px;
+}
+.folderupload .btn-upload{
+  margin-left:15px;
+margin-bottom:10px;
+background-image: linear-gradient(
+    to right,
+    #f09819 0%,
+    #ffcf13 51%,
+    #f09819 100%
+  ) !important;
+  border: none;
+}
+.folderupload label{
+display:none;
+}
+.foldersearch{
+padding-right: 15px;
+}
+.file_open{
+cursor: pointer;
+}
+td{
+pointer-events: auto;
+}
+td a{
+cursor: pointer !important;
+}
+.table thead th {
+  border:none !important;
+}
 .table-striped {
   backdrop-filter: blur(5px);
   background: rgba(255, 255, 255, 0.5);
@@ -719,13 +740,8 @@ img.icon {
   background-color: rgba(116, 116, 116, 0.5);
 }
 .table-striped th {
-  background-image: linear-gradient(
-    to right,
-    #232526 0%,
-    #414345 51%,
-    #232526 100%
-  );
-  color: #f09819;
+background: #232526;
+color: #f09819;
 }
 .wrapper {
   width: 100%;
@@ -738,6 +754,7 @@ img.icon {
 }
 #current-name {
   padding-left: 15px;
+  pointer-events: none;
 }
 .filters {
   padding: 8px 10px;
@@ -764,14 +781,7 @@ img.icon {
   border: 1px solid #bbbbbb;
 }
 
-.btn-outline-success {
-  background-image: linear-gradient(
-    to right,
-    #232526 0%,
-    #414345 51%,
-    #232526 100%
-  );
-}
+.btn-outline-success {background-image: linear-gradient(to right,#000 0%,#414345 51%,#000 100%);}
 .btn-outline-success {
   padding: 5px 25px;
   text-align: center;
@@ -852,12 +862,7 @@ form label.requiredField {
 }
 
 .wrapper .btn-secondary {
-  background-image: linear-gradient(
-    to right,
-    #485563 0%,
-    #29323c 51%,
-    #485563 100%
-  );
+  background-image: linear-gradient(to right,#000 0%,#414345 51%,#000 100%);
 }
 .wrapper .btn-secondary {
   padding: 5px 25px;
@@ -867,7 +872,7 @@ form label.requiredField {
   background-size: 200% auto;
   font-size: 1.2rem;
   font-weight: 500;
-  color: white;
+  color: #f2aa4cff;
   box-shadow: 0 2px 10px rgb(0 0 0 / 30%);
   border-radius: 10px;
   text-decoration: none;
@@ -876,17 +881,12 @@ form label.requiredField {
 
 .wrapper .btn-secondary:hover {
   background-position: right center; /* change the direction of the change here */
-  color: #fff;
+  color: #f2aa4cff;
   text-decoration: none;
 }
 
 .wrapper .btn-confirm {
-  background-image: linear-gradient(
-    to right,
-    #f09819 0%,
-    #f2aa4cff 51%,
-    #f09819 100%
-  );
+  background-image: linear-gradient(to right,#f09819 0%,#ffcf13 51%,#f09819 100%);
 }
 
 .wrapper .btn-confirm {
