@@ -118,7 +118,9 @@
 <br />
 <form method="POST" enctype=multipart/form-data action="{% url 'upload-file-to-folder' current.id %}">
     {% csrf_token %}
-    {{ upload_form|crispy }}
+    <div id="folder-file-upload">
+        {{ upload_form|crispy }}
+    </div>
     <button class="btn btn-upload" type="submit">Submit</button>
 </form><br><br>
 {% endif %}

@@ -268,8 +268,26 @@ select:focus {
   text-align: center;
   width: 100%;
 }
+#folder-file-upload .clearablefileinput {
+  color: #101820ff;
+  background-color: #f2aa4cff;
+  border: 1px solid rgb(16, 24, 32);
+  outline: none;
+  border-radius: 50px;
+  width: 270px;
+  margin-left: 15px;
+}
 
-.clearablefileinput {
+#folder-file-upload ::-webkit-file-upload-button {
+  color: #f2aa4cff;
+  border: 1px solid rgb(242, 170, 76);
+  background-color: #101820ff;
+  border-radius: 50px;
+  height: 35px;
+  width: 120px;
+  font-weight: bold;
+}
+.py-5 .clearablefileinput {
   color: #101820ff;
   background-color: #f2aa4cff;
   border: 1px solid rgb(16, 24, 32);
@@ -279,7 +297,7 @@ select:focus {
   margin: auto;
 }
 
-::-webkit-file-upload-button {
+.py-5 ::-webkit-file-upload-button {
   color: #f2aa4cff;
   border: 1px solid rgb(242, 170, 76);
   background-color: #101820ff;
