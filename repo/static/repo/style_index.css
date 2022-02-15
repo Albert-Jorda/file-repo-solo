@@ -32,6 +32,7 @@ width: 100%;
 overflow: hidden;
 line-height: 0;
 transform: rotate(180deg);
+filter: drop-shadow(0 12px 5px #aaa9a8);
 }
 
 .custom-shape-divider-bottom-1644694962 svg {
@@ -51,6 +52,7 @@ fill: #e8e9e9;
     width: 100%;
     overflow: hidden;
     line-height: 0;
+    filter: drop-shadow(0 12px 5px #aaa9a8);
 }
 
 .custom-shape-divider-top-1644696347 svg {
@@ -64,24 +66,26 @@ fill: #e8e9e9;
     fill: #e8e9e9;
 }
 
-.custom-shape-divider-top-1644698111 {
-    position: absolute;
+/*footerdivider*/
+.custom-shape-divider-bottom-1644861875 {
+    position: relative;
     left: 0;
     width: 100%;
     overflow: hidden;
     line-height: 0;
     transform: rotate(180deg);
+    filter: drop-shadow(0 12px 5px #aaa9a8);
 }
 
-.custom-shape-divider-top-1644698111 svg {
+.custom-shape-divider-bottom-1644861875 svg {
     position: relative;
     display: block;
     width: calc(100% + 1.3px);
-    height: 41px;
+    height: 100px;
 }
 
-.custom-shape-divider-top-1644698111 .shape-fill {
-    fill: #ffffff;
+.custom-shape-divider-bottom-1644861875 .shape-fill {
+    fill: #2e2e2e;
 }
 
 .main-img {

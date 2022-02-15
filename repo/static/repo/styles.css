@@ -123,6 +123,26 @@ a .nav-link:hover {
   backdrop-filter: blur(5px);
   color: #f2ab4f;
   font-size: 3rem;
+top: 30%;
+position: fixed;
+width: 100%;
+z-index: 1000;
+opacity: 0;
+animation: zoomInDown 2s;
+pointer-events: none;
+}
+.message-container {
+align-items: center;
+text-align: center;
+justify-content: center;
+margin: auto;
+width: fit-content;
+border-radius: 12px;
+box-shadow: 0 0.5rem 0.8rem rgb(0 0 0 / 40%);
+background: linear-gradient(to right, #000000 0%, #414141 140%);
+backdrop-filter: blur(5px);
+color: #f2ab4f;
+font-size: 3rem;
 }
 
 /*Forms*/
