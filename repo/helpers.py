@@ -6,7 +6,7 @@ def determine_category(filename: str) -> str:
     result = DEFAULT_CATEGORY
 
     for category in CATEGORIES:
-        if fileExtension in CATEGORIES_MAP[category]:
+        if fileExtension.lower() in CATEGORIES_MAP[category]:
             result = category
             break
 
