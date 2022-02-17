@@ -67,6 +67,7 @@ nav.navbar {
   transition: 2s ease;
   z-index: 1000;
 }
+
 #logopic {
   height: 25px;
   width: 25px;
@@ -640,7 +641,10 @@ img.icon {
   -webkit-animation-name: zoomInDown;
   animation-name: zoomInDown;
 }
-
+.rootwrapper {
+  margin-left:9rem !important;
+  margin-right: 9rem !important;
+}
 /*REPOSITORY MAIN DESIGN*/
 .folder-container{
 margin-top:2% !important;
@@ -668,6 +672,7 @@ text-align: center;
   font-weight: 600;
 }
 .head-wrapper{
+  margin: auto 8rem;
 display:flex;
 flex-direction: row;
 justify-content: space-between;
@@ -677,6 +682,7 @@ justify-content: space-between;
 flex-direction: row;
 }
 .folderupload{
+  margin: auto 8rem;
 display:flex;
 height:fit-content;
 flex-direction: row;
@@ -723,10 +729,15 @@ pointer-events: auto;
 td a{
 cursor: pointer !important;
 }
+.tablewrapper{
+margin-left: 8rem;
+margin-right:10rem;
+}
 .table thead th {
   border:none !important;
 }
 .table-striped {
+  margin: 1rem 1rem;
   backdrop-filter: blur(5px);
   background: rgba(255, 255, 255, 0.5);
 }
