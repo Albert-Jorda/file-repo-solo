@@ -559,6 +559,7 @@ def archive_file(request, file_id):
     if request.method == "POST":
         if request.POST.get("confirmation") == "confirm":
             file.is_archived = True
+            file.save()
             logger.info(
                 f'User {request.user.username} archived file { file.name }')
             messages.info(request, f"File { file.name } Archived!")
@@ -591,6 +592,7 @@ def restore_file(request, file_id):
     if request.method == "POST":
         if request.POST.get("confirmation") == "confirm":
             file.is_archived = False
+            file.save()
             logger.info(
                 f'User {request.user.username} restored file { file.name }')
             messages.info(request, f"File { file.name } restored!")
