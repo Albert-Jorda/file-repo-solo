@@ -590,7 +590,7 @@ def restore_file(request, file_id):
 
     if request.method == "POST":
         if request.POST.get("confirmation") == "confirm":
-            file.is_archived = True
+            file.is_archived = False
             logger.info(
                 f'User {request.user.username} restored file { file.name }')
             messages.info(request, f"File { file.name } restored!")
