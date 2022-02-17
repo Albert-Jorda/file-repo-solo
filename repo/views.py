@@ -271,7 +271,7 @@ def view_archive(request):
     filesList = File.objects.filter(is_archived=True)
 
     return render(request, FOLDER_VIEW_TEMPLATE, {
-        "action": "View Repo",
+        "action": "View Archive",
         "current": None,
         "parent": None,
         "children": None,
@@ -597,7 +597,7 @@ def restore_file(request, file_id):
                 f'User {request.user.username} restored file { file.name }')
             messages.info(request, f"File { file.name } restored!")
 
-        return redirect('view-archive')
+        return redirect('view-folder', file.folder.id)
     else:
         return render(request, CONFIRMATION_TEMPLATE, {
             "action": "Confirm File Restore",
