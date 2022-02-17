@@ -21,7 +21,7 @@
 <body>
   <!-- <div id="navbar">Links:</div> -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navigation">
-    <img id="logopic" src="{% static 'repo/images/logo.png' %}" alt="">
+     <a href="{% url 'index' %}"><img id="logopic" src="{% static 'repo/images/logo.png' %}" alt=""></a>
     <a class="navbar-brand" href="{% url 'index' %}">FiRE</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
