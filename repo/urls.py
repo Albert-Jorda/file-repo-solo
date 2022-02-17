@@ -17,6 +17,8 @@ urlpatterns = [
     path('repo/view', views.view_repo, name='view-repo'),
     path('repo/view/folder/<int:folder_id>',
          views.view_folder, name='view-folder'),
+    path('repo/view/archive',
+         views.view_archive, name='view-archive'),
     path('repo/view/file/<int:file_id>', views.view_file, name='view-file'),
 
     # File Upload
@@ -35,6 +37,8 @@ urlpatterns = [
          views.rename_folder, name='rename-folder'),
     path('repo/rename/file/<int:file_id>',
          views.rename_file, name='rename-file'),
+    path('repo/add/archive/<int:file_id>', views.archive_file, name="archive-file"),
+    path('repo/remove/archive/<int:file_id>', views.restore_file, name="restore-file"),
 
     # Profile
     path('profile/change', views.view_profile, name="view-profile"),

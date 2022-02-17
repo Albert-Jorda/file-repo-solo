@@ -95,7 +95,7 @@ def logout_request(request):
             logger.info(f'User "{ request.user.username }" logged out.')
             logout(request)
 
-        return redirect(request.GET.get("prev_url", ''))
+        return redirect('index')
     else:
         return render(request, CONFIRMATION_TEMPLATE, {
             "action": "Confirm Logout",
@@ -234,6 +234,54 @@ def view_folder(request, folder_id):
         "sequences": ['increasing', 'decreasing'],
         "filesList": filesList,
         "url_name": 'repo/view/folder/' + str(folder_id)
+    })
+
+@login_required
+def view_archive(request):
+    files: list[File] = File.objects.filter(owner=request.user, is_archived=True)
+    category = request.GET.get('category', '')
+    orderBy = request.GET.get('order_by', '')
+    sequence = request.GET.get('sequence', '')
+    search = request.GET.get('search', '')
+
+    if category:
+        files = File.objects.filter(is_archived=True, category=category)
+
+    if orderBy:
+        files = File.objects.filter(is_archived=True).order_by(orderBy)
+
+    if search:
+        files = File.objects.filter(is_archived=True, name__icontains=search)
+
+    if sequence:
+        files = File.objects.filter(is_archived=True).order_by(
+            'uploaded_at' if sequence == 'increasing' else '-uploaded_at')
+        if category:
+            files = File.objects.filter(
+                is_archived=True, category=category).order_by('category' if sequence == 'increasing' else '-category')
+        if orderBy:
+            files = File.objects.filter(is_archived=True).order_by(
+                orderBy if sequence == 'increasing' else f'-{orderBy}')
+        if search:
+            files = File.objects.filter(is_archived=True, name__icontains=search).order_by(
+                'name' if sequence == 'increasing' else '-name')
+
+    categories = sorted(
+        list(set(File.objects.values_list('category', flat=True))))
+    filesList = File.objects.filter(is_archived=True)
+
+    return render(request, FOLDER_VIEW_TEMPLATE, {
+        "action": "View Repo",
+        "current": None,
+        "parent": None,
+        "children": None,
+        "files": files,
+        "upload_form": None,
+        "categories": categories,
+        "order_by": ['name', 'category', 'uploaded_at'],
+        "sequences": ['increasing', 'decreasing'],
+        "filesList": filesList,
+        "url_name": 'repo/view/archive/'
     })
 
 
@@ -489,3 +537,67 @@ def change_profile_picture(request):
         form = ChangeImageForm()
 
     return render(request, FORM_TEMPLATE, {'action': 'Change Profile Picture', 'form': form, "url_name": 'change-profile-picture'})
+
+
+@ login_required
+def archive_file(request, file_id):
+    file = File.objects.get(pk=file_id)
+
+    if file.owner != request.user:
+        logger.warning(
+            f'User {request.user.username} tried to archive file { file.name } without proper ownership')
+        messages.warning(
+            request, "Insufficient permissions to archive the file!")
+
+        return redirect('view-repo')
+
+    if file.is_archived:
+        messages.warning(request, "The file is already archived!")
+
+        return redirect('view-repo')
+
+    if request.method == "POST":
+        if request.POST.get("confirmation") == "confirm":
+            file.is_archived = True
+            logger.info(
+                f'User {request.user.username} archived file { file.name }')
+            messages.info(request, f"File { file.name } Archived!")
+
+        return redirect('view-archive')
+    else:
+        return render(request, CONFIRMATION_TEMPLATE, {
+            "action": "Confirm File Archive",
+            "url_name": 'archive-file'
+        })
+
+
+@ login_required
+def restore_file(request, file_id):
+    file = File.objects.get(pk=file_id)
+
+    if file.owner != request.user:
+        logger.warning(
+            f'User {request.user.username} tried to restore file { file.name } without proper ownership')
+        messages.warning(
+            request, "Insufficient permissions to restore the file!")
+
+        return redirect('view-repo')
+
+    if not file.is_archived:
+        messages.warning(request, "The file is not archived!")
+
+        return redirect('view-repo')
+
+    if request.method == "POST":
+        if request.POST.get("confirmation") == "confirm":
+            file.is_archived = True
+            logger.info(
+                f'User {request.user.username} restored file { file.name }')
+            messages.info(request, f"File { file.name } restored!")
+
+        return redirect('view-archive')
+    else:
+        return render(request, CONFIRMATION_TEMPLATE, {
+            "action": "Confirm File Restore",
+            "url_name": 'restore-file'
+        })

@@ -46,8 +46,6 @@ A folder, if not is_root should have an heir data with it as the "folder"
 It will relate itself to a folder which it will refer to as its "parent"
 
 '''
-
-
 class HeirData(models.Model):
     folder = models.ForeignKey(
         Folder, on_delete=models.CASCADE, related_name="parents")
@@ -66,6 +64,8 @@ class File(models.Model):
     folder = models.ForeignKey(
         Folder, on_delete=models.CASCADE, related_name="files")
     file = models.FileField(upload_to='')
+
+    is_archived = models.BooleanField(default=False)
 
     def __str__(self):
         return self.file.name
