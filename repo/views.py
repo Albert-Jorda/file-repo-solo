@@ -83,15 +83,7 @@ def register_request(request):
             user.save()
             logger.info(f'User "{ user.username }" created.')
             messages.info(request, f"{user.username} is created!")
-
-            # Give user a root folder on registration
-            new_root_folder = Folder(
-                owner=user,
-                name="root",
-                is_root=True
-            )
-
-            new_root_folder.save()
+            
             return redirect("index")
 
         logger.warning(f"Invalid form submit on registration.")
