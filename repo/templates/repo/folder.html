@@ -4,7 +4,9 @@
 <br><br>
 <div class="folder-container">
     <h1 class="ftitle">FILE  REPOSITORY</h1>
-    {% if files %}
+    <div class="rootwrapper">
+        {% if files %}
+    </div>
     <div class="dropdown-wrapper">
         <div class="dropdown-wrap">
             <!-- by category -->
@@ -114,61 +116,63 @@
             </div>
             {% endif %}
         </div>
+        <div class="tablewrapper">
+            {% endif %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Uploaded at</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+            
+                    {% if parent %}
+                    <tr data-url="{% url 'view-folder' parent.id %}" class="folder">
+                        <td> {{ parent.name }} </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {% endif %}
+            
+                    {% for folder in children %}
+                    <tr data-url="{% url 'view-folder' folder.id %}" class="folder">
+                        <td> {{ folder.name }} </td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            {% if current.is_root %}
+                            <a href="{% url 'rename-folder' folder.id %}">Rename</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'delete-folder' folder.id %}">Delete</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+            
+                    {% for file in files %}
+                    <tr>
+                        <td data-url="{% url 'view-file' file.id %}" class="file_open"> {{ file.name }} </td>
+                        <td> {{ file.category }} </td>
+                        <td> {{ file.uploaded_at }} </td>
+                        <td>
+                            <a href="{{ file.file.url }}" download>Save</a>
+                            {% if not file.is_archived %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'archive-file' file.id %}">Archive</a>
+                            {% else %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'restore-file' file.id %}">Restore</a>
+                            {% endif %}
+                            &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'rename-file' file.id %}">Rename</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'delete-file' file.id %}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         
-        {% endif %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Uploaded at</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-        
-                {% if parent %}
-                <tr data-url="{% url 'view-folder' parent.id %}" class="folder">
-                    <td> {{ parent.name }} </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                {% endif %}
-        
-                {% for folder in children %}
-                <tr data-url="{% url 'view-folder' folder.id %}" class="folder">
-                    <td> {{ folder.name }} </td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        {% if current.is_root %}
-                        <a href="{% url 'rename-folder' folder.id %}">Rename</a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'delete-folder' folder.id %}">Delete</a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-        
-                {% for file in files %}
-                <tr>
-                    <td data-url="{% url 'view-file' file.id %}" class="file_open"> {{ file.name }} </td>
-                    <td> {{ file.category }} </td>
-                    <td> {{ file.uploaded_at }} </td>
-                    <td>
-                        <a href="{{ file.file.url }}" download>Save</a>
-                        {% if not file.is_archived %}
-                            &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'archive-file' file.id %}">Archive</a>
-                        {% else %}
-                            &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'restore-file' file.id %}">Restore</a>
-                        {% endif %}
-                        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'rename-file' file.id %}">Rename</a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'delete-file' file.id %}">Delete</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
         
         {% if current %}
         <br/>
