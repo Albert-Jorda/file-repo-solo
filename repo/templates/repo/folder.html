@@ -120,7 +120,7 @@
                     <td> {{ file.uploaded_at }} </td>
                     <td>
                         <a href="{{ file.file.url }}" download>Save</a>
-                        {% if file.is_archived %}
+                        {% if not file.is_archived %}
                             &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'archive-file' file.id %}">Archive</a>
                         {% else %}
                             &nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'restore-file' file.id %}">Restore</a>
