@@ -21,7 +21,7 @@
                     {% endfor %}
                 {   % endif %}
                 {% elif action == "View Archive" %}
-                    option value="all" data-url="{% url 'view-archive' %}?category=">all</option>
+                    <option value="all" data-url="{% url 'view-archive'  %}?category=">all</option>
                     {% for category in categories %}
                     {% if request.GET.category == category %}
                     <option value="{{ category }}" data-url="{% url 'view-archive' %}?category={{category}}" selected>{{ category }}</option>
