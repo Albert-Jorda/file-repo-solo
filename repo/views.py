@@ -21,7 +21,10 @@ PROFILE_VIEW_TEMPLATE = "repo/profile.html"
 
 # Create your views here.
 def index(request):
+    if request.user.is_authenticated:
+        return redirect('view-repo')
     return render(request, "repo/index.html", {"url_name": 'index'})
+
 
 
 def login_request(request):
