@@ -189,7 +189,7 @@ def view_folder(request, folder_id):
 
     parent = heir_data_parent.parent if heir_data_parent else None
 
-    files = File.objects.filter(folder=folder)
+    files = File.objects.filter(folder=folder, is_archived=False)
 
     category = request.GET.get('category', '')
     orderBy = request.GET.get('order_by', '')
