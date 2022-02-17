@@ -20,14 +20,8 @@ CONFIRMATION_TEMPLATE = "repo/confirmation.html"
 PROFILE_VIEW_TEMPLATE = "repo/profile.html"
 
 # Create your views here.
-
-# DONE
-
-
 def index(request):
     return render(request, "repo/index.html", {"url_name": 'index'})
-
-# DONE
 
 
 def login_request(request):
@@ -69,8 +63,6 @@ def login_request(request):
         "url_name": 'login'
     })
 
-# DONE
-
 
 def register_request(request):
     form = RegistrationForm()
@@ -95,8 +87,6 @@ def register_request(request):
         "url_name": 'register'
     })
 
-# DONE
-
 
 @login_required
 def logout_request(request):
@@ -111,8 +101,6 @@ def logout_request(request):
             "action": "Confirm Logout",
             "url_name": 'logout'
         })
-
-# DONE
 
 
 @login_required
@@ -143,8 +131,6 @@ def upload_file(request):
         "url_name": 'upload-file'
     })
 
-# DONE
-
 
 @login_required
 def upload_file_to_folder(request, folder_id):
@@ -165,8 +151,6 @@ def upload_file_to_folder(request, folder_id):
 
     return redirect('view-folder', folder_id)
 
-# DONE
-
 
 @login_required
 def view_repo(request):
@@ -181,8 +165,6 @@ def view_repo(request):
         "upload_form": None,
         "url_name": 'view-repo'
     })
-
-# DONE
 
 
 @login_required
@@ -254,8 +236,6 @@ def view_folder(request, folder_id):
         "url_name": 'repo/view/folder/' + str(folder_id)
     })
 
-# DONE
-
 
 @ login_required
 def create_folder(request, parent_folder_id):
@@ -283,8 +263,6 @@ def create_folder(request, parent_folder_id):
     messages.error(request, "Something went wrong.")
     return redirect('view-folder', parent_folder_id)
 
-# DONE
-
 
 @ login_required
 def view_file(request, file_id):
@@ -299,8 +277,6 @@ def view_file(request, file_id):
     filename = file.file.path
     response = FileResponse(open(filename, 'rb'))
     return response
-
-# DONE
 
 
 @ login_required
@@ -330,8 +306,6 @@ def delete_folder(request, folder_id):
             "url_name": 'delete-folder'
         })
 
-# DONE
-
 
 @ login_required
 def delete_file(request, file_id):
@@ -359,8 +333,6 @@ def delete_file(request, file_id):
             "action": "Confirm File Delete",
             "url_name": 'delete-file'
         })
-
-# DONE
 
 
 @ login_required
@@ -403,8 +375,6 @@ def rename_folder(request, folder_id):
             "url_name": 'rename-folder'
         })
 
-# DONE
-
 
 @ login_required
 def rename_file(request, file_id):
@@ -440,14 +410,10 @@ def rename_file(request, file_id):
             "url_name": 'rename-file'
         })
 
-# DONE
-
 
 @login_required
 def view_profile(request):
     return render(request, PROFILE_VIEW_TEMPLATE, {"url_name": 'view-profile'})
-
-# DONE
 
 
 @login_required
@@ -465,7 +431,6 @@ def change_password(request):
     else:
         form = form = PasswordChangeForm(request.user)
     return render(request, FORM_TEMPLATE, {'action': 'Change Password', 'form': form, "url_name": 'change-password'})
-# DONE
 
 
 @login_required
@@ -487,7 +452,6 @@ def change_username(request):
         form = ChangeUsernameForm()
 
     return render(request, FORM_TEMPLATE, {'action': 'Change Username', 'form': form, "url_name": 'change-username'})
-# DONE
 
 
 @ login_required
